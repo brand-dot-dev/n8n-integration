@@ -73,8 +73,7 @@ This node supports the following resources and operations:
 To use this node, you need a Brand.dev API key:
 
 1. Sign up for a free account at [Brand.dev](https://brand.dev)
-2. Navigate to your [API settings](https://brand.dev/dashboard/settings/api)
-3. Generate a new API key (starts with `sk_live_...`)
+2. Go to your [dashboard](https://brand.dev/home) and copy your API key
 4. In n8n, create new credentials:
    - Go to **Credentials** > **New**
    - Search for "Brand.dev API"
