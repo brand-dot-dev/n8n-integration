@@ -25,6 +25,7 @@ export class Branddev implements INodeType {
 			headers: {
 				Accept: 'application/json',
 				'Content-Type': 'application/json',
+				'integration_name': 'n8n',
 			},
 		},
 		properties: [
