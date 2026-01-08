@@ -204,7 +204,7 @@ export const brandDescription: INodeProperties[] = [
 				displayName: 'Force Language',
 				name: 'force_language',
 				type: 'options',
-				default: 'albanian',
+				default: 'english',
 				description: 'Force the language of the retrieved brand data',
 				options: [
 					{ name: 'Albanian', value: 'albanian' },
