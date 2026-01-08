@@ -32,6 +32,7 @@ export class BranddevApi implements ICredentialType {
 		properties: {
 			headers: {
 				Authorization: '=Bearer {{$credentials.accessToken}}',
+				'integration_name': 'n8n',
 			},
 		},
 	};
