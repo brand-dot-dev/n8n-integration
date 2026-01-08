@@ -15,6 +15,18 @@ export const brandDescription: INodeProperties[] = [
 		},
 		options: [
 			{
+				name: 'Identify From Transaction',
+				value: 'identifyByTransaction',
+				action: 'Identify brand from transaction data',
+				description: 'Identify brands from transaction information with optional geographic and industry context. <a href="https://docs.brand.dev/api-reference/retrieve-brand/identify-brand-from-transaction-data" target="_blank">View docs</a>.',
+				routing: {
+					request: {
+						method: 'GET',
+						url: '/brand/transaction_identifier',
+					},
+				},
+			},
+			{
 				name: 'Retrieve by Company Name',
 				value: 'retrieveByName',
 				action: 'Retrieve brand data by company name',
@@ -71,6 +83,18 @@ export const brandDescription: INodeProperties[] = [
 					request: {
 						method: 'GET',
 						url: '/brand/retrieve-by-ticker',
+					},
+				},
+			},
+			{
+				name: 'Retrieve Simplified by Domain',
+				value: 'retrieveSimplified',
+				action: 'Retrieve simplified brand data by domain',
+				description: 'Get essential brand information (domain, title, colors, logos, backdrops) optimized for speed. <a href="https://docs.brand.dev/api-reference/retrieve-brand/retrieve-simplified-brand-data-by-domain" target="_blank">View docs</a>.',
+				routing: {
+					request: {
+						method: 'GET',
+						url: '/brand/retrieve-simplified',
 					},
 				},
 			},
@@ -188,6 +212,50 @@ export const brandDescription: INodeProperties[] = [
 		},
 	},
 	{
+		displayName: 'Domain',
+		name: 'simplifiedDomain',
+		type: 'string',
+		required: true,
+		displayOptions: {
+			show: {
+				...showOnlyForBrand,
+				operation: ['retrieveSimplified'],
+			},
+		},
+		default: '',
+		placeholder: 'example.com',
+		description: 'The domain to retrieve simplified brand information for',
+		routing: {
+			request: {
+				qs: {
+					domain: '={{ $value }}',
+				},
+			},
+		},
+	},
+	{
+		displayName: 'Transaction Title',
+		name: 'transaction_title',
+		type: 'string',
+		required: true,
+		displayOptions: {
+			show: {
+				...showOnlyForBrand,
+				operation: ['identifyByTransaction'],
+			},
+		},
+		default: '',
+		placeholder: 'STARBUCKS STORE #12345',
+		description: 'The transaction title or merchant name from the transaction data',
+		routing: {
+			request: {
+				qs: {
+					transaction_info: '={{ $value }}',
+				},
+			},
+		},
+	},
+	{
 		displayName: 'Additional Fields',
 		name: 'additionalFields',
 		type: 'collection',
@@ -196,10 +264,70 @@ export const brandDescription: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				...showOnlyForBrand,
-				operation: ['retrieve', 'retrieveByName', 'retrieveByEmail', 'retrieveByTicker', 'retrieveByIsin'],
+				operation: ['retrieve', 'retrieveByName', 'retrieveByEmail', 'retrieveByTicker', 'retrieveByIsin', 'retrieveSimplified', 'identifyByTransaction'],
 			},
 		},
 		options: [
+			{
+				displayName: 'City',
+				name: 'city',
+				type: 'string',
+				displayOptions: {
+					show: {
+						'/operation': ['identifyByTransaction'],
+					},
+				},
+				default: '',
+				placeholder: 'San Francisco',
+				description: 'City where the transaction occurred',
+				routing: {
+					request: {
+						qs: {
+							city: '={{ $value }}',
+						},
+					},
+				},
+			},
+			{
+				displayName: 'Country',
+				name: 'country',
+				type: 'string',
+				displayOptions: {
+					show: {
+						'/operation': ['identifyByTransaction'],
+					},
+				},
+				default: '',
+				placeholder: 'United States',
+				description: 'Country where the transaction occurred',
+				routing: {
+					request: {
+						qs: {
+							country: '={{ $value }}',
+						},
+					},
+				},
+			},
+			{
+				displayName: 'Country GL',
+				name: 'country_gl',
+				type: 'string',
+				displayOptions: {
+					show: {
+						'/operation': ['identifyByTransaction'],
+					},
+				},
+				default: '',
+				placeholder: 'us',
+				description: 'ISO 3166-1 alpha-2 country code for geographic search prioritization (e.g., us, gb, ca)',
+				routing: {
+					request: {
+						qs: {
+							country_gl: '={{ $value }}',
+						},
+					},
+				},
+			},
 			{
 				displayName: 'Force Language',
 				name: 'force_language',
@@ -264,6 +392,120 @@ export const brandDescription: INodeProperties[] = [
 				},
 			},
 			{
+				displayName: 'Latitude',
+				name: 'latitude',
+				type: 'number',
+				displayOptions: {
+					show: {
+						'/operation': ['identifyByTransaction'],
+					},
+				},
+				default: 0,
+				placeholder: '37.7749',
+				description: 'Latitude coordinate of the transaction location',
+				routing: {
+					request: {
+						qs: {
+							latitude: '={{ $value }}',
+						},
+					},
+				},
+			},
+			{
+				displayName: 'Longitude',
+				name: 'longitude',
+				type: 'number',
+				displayOptions: {
+					show: {
+						'/operation': ['identifyByTransaction'],
+					},
+				},
+				default: 0,
+				placeholder: '-122.4194',
+				description: 'Longitude coordinate of the transaction location',
+				routing: {
+					request: {
+						qs: {
+							longitude: '={{ $value }}',
+						},
+					},
+				},
+			},
+			{
+				displayName: 'MCC (Merchant Category Code)',
+				name: 'mcc',
+				type: 'string',
+				displayOptions: {
+					show: {
+						'/operation': ['identifyByTransaction'],
+					},
+				},
+				default: '',
+				placeholder: '5814',
+				description: 'Merchant Category Code (4-digit code) for business category context',
+				routing: {
+					request: {
+						qs: {
+							mcc: '={{ $value }}',
+						},
+					},
+				},
+			},
+			{
+				displayName: 'Postal Code',
+				name: 'postal_code',
+				type: 'string',
+				displayOptions: {
+					show: {
+						'/operation': ['identifyByTransaction'],
+					},
+				},
+				default: '',
+				placeholder: '94103',
+				description: 'Postal or ZIP code of the transaction location',
+				routing: {
+					request: {
+						qs: {
+							postal_code: '={{ $value }}',
+						},
+					},
+				},
+			},
+			{
+				displayName: 'Speed Optimized',
+				name: 'speed_optimized',
+				type: 'boolean',
+				default: false,
+				description: 'Whether to optimize for speed by skipping time-consuming operations. Results in faster response but less comprehensive data.',
+				routing: {
+					request: {
+						qs: {
+							speed_optimized: '={{ $value }}',
+						},
+					},
+				},
+			},
+			{
+				displayName: 'State',
+				name: 'state',
+				type: 'string',
+				displayOptions: {
+					show: {
+						'/operation': ['identifyByTransaction'],
+					},
+				},
+				default: '',
+				placeholder: 'CA',
+				description: 'State or province where the transaction occurred',
+				routing: {
+					request: {
+						qs: {
+							state: '={{ $value }}',
+						},
+					},
+				},
+			},
+			{
 				displayName: 'Ticker Exchange',
 				name: 'ticker_exchange',
 				type: 'options',
@@ -312,20 +554,6 @@ export const brandDescription: INodeProperties[] = [
 					request: {
 						qs: {
 							ticker_exchange: '={{ $value }}',
-						},
-					},
-				},
-			},
-			{
-				displayName: 'Speed Optimized',
-				name: 'speed_optimized',
-				type: 'boolean',
-				default: false,
-				description: 'Whether to optimize for speed by skipping time-consuming operations. Results in faster response but less comprehensive data.',
-				routing: {
-					request: {
-						qs: {
-							speed_optimized: '={{ $value }}',
 						},
 					},
 				},

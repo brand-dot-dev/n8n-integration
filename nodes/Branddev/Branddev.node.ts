@@ -1,6 +1,7 @@
 import { NodeConnectionTypes, type INodeType, type INodeTypeDescription } from 'n8n-workflow';
 import { brandDescription } from './resources/brand';
 import { naicsDescription } from './resources/naics';
+import { productDescription } from './resources/aiDataExtraction';
 import { screenshotStyleguideDescription } from './resources/screenshot';
 
 export class Branddev implements INodeType {
@@ -34,12 +35,16 @@ export class Branddev implements INodeType {
 				noDataExpression: true,
 				options: [
 					{
-						name: 'Brand',
+						name: 'Retrieve Brand',
 						value: 'brand',
 					},
 					{
 						name: 'Industry Classification',
 						value: 'naics',
+					},
+					{
+						name: 'AI Data Extraction',
+						value: 'aiDataExtraction',
 					},
 					{
 						name: 'Screenshot / Styleguide',
@@ -50,6 +55,7 @@ export class Branddev implements INodeType {
 			},
 			...brandDescription,
 			...naicsDescription,
+			...productDescription,
 			...screenshotStyleguideDescription,
 		],
 	};
