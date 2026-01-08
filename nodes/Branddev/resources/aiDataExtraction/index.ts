@@ -17,7 +17,7 @@ export const productDescription: INodeProperties[] = [
 			{
 				name: 'Extract Products From a Brand\'s Website',
 				value: 'extractFromWebsite',
-				action: "Extract products from a brand's website",
+				action: 'Extract products from a brand s website',
 				description: 'Extract product information from a brand\'s website including name, description, pricing, and more. <a href="https://docs.brand.dev/api-reference/ai-data-extraction/extract-products-from-a-brands-website" target="_blank">View docs</a>.',
 				routing: {
 					request: {
