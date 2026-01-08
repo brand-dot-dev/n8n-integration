@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "n8n node for Brand.dev API - retrieve brand data, screenshots, and company information",
   "license": "MIT",
-  "homepage": "",
+  "homepage": "https://github.com/brand-dot-dev/n8n-integration#readme",
   "keywords": ["n8n-community-node-package"],
   "author": {
     "name": "Nikhil",
@@ -19,6 +19,7 @@
     "dev": "n8n-node dev",
     "lint": "n8n-node lint",
     "lint:fix": "n8n-node lint --fix",
+    "test": "npm run lint",
     "release": "n8n-node release",
     "prepublishOnly": "n8n-node prerelease"
   },
