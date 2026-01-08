@@ -22,7 +22,7 @@ export class BranddevApi implements ICredentialType {
 			typeOptions: { password: true },
 			required: true,
 			default: '',
-			placeholder: 'sk_live_...',
+			placeholder: 'brand_...',
 			description: 'API key from your Brand.dev account',
 		},
 	];
