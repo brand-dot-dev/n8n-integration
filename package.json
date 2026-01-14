@@ -32,7 +32,7 @@
     "n8nNodesApiVersion": 1,
     "strict": true,
     "credentials": [
-      "dist/credentials/BranddevApi.credentials.js"
+      "credentials/BranddevApi.credentials.ts"
     ],
     "nodes": [
       "dist/nodes/Branddev/Branddev.node.js"
