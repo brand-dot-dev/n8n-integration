@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/brand-dot-dev/n8n-integration.git"
+    "url": "https://github.com/brand-dot-dev/brand-dev-n8n.git"
   },
   "scripts": {
     "build": "n8n-node build",
@@ -32,7 +32,7 @@
     "n8nNodesApiVersion": 1,
     "strict": true,
     "credentials": [
-      "credentials/BranddevApi.credentials.ts"
+      "dist/credentials/BranddevApi.credentials.js"
     ],
     "nodes": [
       "dist/nodes/Branddev/Branddev.node.js"
