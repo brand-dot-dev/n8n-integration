@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-branddev",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "n8n node for Brand.dev API - retrieve brand data, screenshots, and company information",
   "license": "MIT",
   "homepage": "https://github.com/brand-dot-dev/n8n-integration#readme",
