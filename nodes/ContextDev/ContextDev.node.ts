@@ -13,7 +13,7 @@ export class ContextDev implements INodeType {
 		icon: 'file:context-dev-logo.svg',
 		group: ['transform'],
 		version: 1,
-		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
+		subtitle: '={{$parameter["resource"] + ": " + $parameter["operation"]}}',
 		description: 'Web scraping, brand intelligence, and AI data extraction via Context.dev',
 		defaults: {
 			name: 'Context.dev',
