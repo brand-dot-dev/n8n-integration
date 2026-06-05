@@ -1,0 +1,891 @@
+{
+  "generated": "2026-06-05T15:05:10.547Z",
+  "sdk_source": "/Users/main/Projects/n8n-contextdev/context-typescript-sdk/src/resources",
+  "endpoint_count": 25,
+  "endpoints": [
+    {
+      "resource": "ai",
+      "sdkMethod": "extractProduct",
+      "httpMethod": "POST",
+      "path": "/brand/ai/product",
+      "paramsInterface": "AIExtractProductParams",
+      "responseInterface": "AIAIQueryResponse",
+      "params": [
+        {
+          "name": "url",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "maxAgeMs",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "timeoutMS",
+          "type": "number",
+          "required": false
+        }
+      ]
+    },
+    {
+      "resource": "ai",
+      "sdkMethod": "extractProducts",
+      "httpMethod": "POST",
+      "path": "/brand/ai/products",
+      "paramsInterface": "AIExtractProductsParams",
+      "responseInterface": "AIExtractProductsResponse",
+      "params": []
+    },
+    {
+      "resource": "ai",
+      "sdkMethod": "aiQuery",
+      "httpMethod": "POST",
+      "path": "/brand/ai/query",
+      "paramsInterface": "AIAIQueryParams",
+      "responseInterface": "AIAIQueryResponse",
+      "params": [
+        {
+          "name": "data_to_extract",
+          "type": "Array<AIAIQueryParams.DataToExtract>",
+          "required": true
+        },
+        {
+          "name": "domain",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "specific_pages",
+          "type": "AIAIQueryParams.SpecificPages",
+          "required": false
+        },
+        {
+          "name": "timeoutMS",
+          "type": "number",
+          "required": false
+        }
+      ]
+    },
+    {
+      "resource": "brand",
+      "sdkMethod": "retrieve",
+      "httpMethod": "GET",
+      "path": "/brand/retrieve",
+      "paramsInterface": "BrandRetrieveParams",
+      "responseInterface": "BrandRetrieveResponse",
+      "params": [
+        {
+          "name": "domain",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "maxAgeMs",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "maxSpeed",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "timeoutMS",
+          "type": "number",
+          "required": false
+        }
+      ]
+    },
+    {
+      "resource": "brand",
+      "sdkMethod": "retrieveByEmail",
+      "httpMethod": "GET",
+      "path": "/brand/retrieve-by-email",
+      "paramsInterface": "BrandRetrieveByEmailParams",
+      "responseInterface": "BrandRetrieveByEmailResponse",
+      "params": [
+        {
+          "name": "email",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "maxAgeMs",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "maxSpeed",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "timeoutMS",
+          "type": "number",
+          "required": false
+        }
+      ]
+    },
+    {
+      "resource": "brand",
+      "sdkMethod": "retrieveByIsin",
+      "httpMethod": "GET",
+      "path": "/brand/retrieve-by-isin",
+      "paramsInterface": "BrandRetrieveByIsinParams",
+      "responseInterface": "BrandRetrieveByEmailResponse",
+      "params": [
+        {
+          "name": "isin",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "maxAgeMs",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "maxSpeed",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "timeoutMS",
+          "type": "number",
+          "required": false
+        }
+      ]
+    },
+    {
+      "resource": "brand",
+      "sdkMethod": "retrieveByName",
+      "httpMethod": "GET",
+      "path": "/brand/retrieve-by-name",
+      "paramsInterface": "BrandRetrieveByNameParams",
+      "responseInterface": "BrandRetrieveByIsinResponse",
+      "params": [
+        {
+          "name": "name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "maxAgeMs",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "maxSpeed",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "timeoutMS",
+          "type": "number",
+          "required": false
+        }
+      ]
+    },
+    {
+      "resource": "brand",
+      "sdkMethod": "retrieveByTicker",
+      "httpMethod": "GET",
+      "path": "/brand/retrieve-by-ticker",
+      "paramsInterface": "BrandRetrieveByTickerParams",
+      "responseInterface": "BrandRetrieveByNameResponse",
+      "params": [
+        {
+          "name": "ticker",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "maxAgeMs",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "maxSpeed",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "timeoutMS",
+          "type": "number",
+          "required": false
+        }
+      ]
+    },
+    {
+      "resource": "brand",
+      "sdkMethod": "retrieveSimplified",
+      "httpMethod": "GET",
+      "path": "/brand/retrieve-simplified",
+      "paramsInterface": "BrandRetrieveSimplifiedParams",
+      "responseInterface": "BrandRetrieveSimplifiedResponse",
+      "params": [
+        {
+          "name": "domain",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "maxAgeMs",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "timeoutMS",
+          "type": "number",
+          "required": false
+        }
+      ]
+    },
+    {
+      "resource": "brand",
+      "sdkMethod": "identifyFromTransaction",
+      "httpMethod": "GET",
+      "path": "/brand/transaction_identifier",
+      "paramsInterface": "BrandIdentifyFromTransactionParams",
+      "responseInterface": "BrandIdentifyFromTransactionResponse",
+      "params": [
+        {
+          "name": "transaction_info",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "city",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "high_confidence_only",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "maxSpeed",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "mcc",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "phone",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "timeoutMS",
+          "type": "number",
+          "required": false
+        }
+      ]
+    },
+    {
+      "resource": "industry",
+      "sdkMethod": "retrieveNaics",
+      "httpMethod": "GET",
+      "path": "/web/naics",
+      "paramsInterface": "IndustryRetrieveNaicsParams",
+      "responseInterface": "IndustryRetrieveNaicsResponse",
+      "params": [
+        {
+          "name": "input",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "maxResults",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "minResults",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "timeoutMS",
+          "type": "number",
+          "required": false
+        }
+      ]
+    },
+    {
+      "resource": "industry",
+      "sdkMethod": "retrieveSic",
+      "httpMethod": "GET",
+      "path": "/web/sic",
+      "paramsInterface": "IndustryRetrieveSicParams",
+      "responseInterface": "IndustryRetrieveSicResponse",
+      "params": [
+        {
+          "name": "input",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "maxResults",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "minResults",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "timeoutMS",
+          "type": "number",
+          "required": false
+        }
+      ]
+    },
+    {
+      "resource": "utility",
+      "sdkMethod": "prefetch",
+      "httpMethod": "POST",
+      "path": "/brand/prefetch",
+      "paramsInterface": "UtilityPrefetchParams",
+      "responseInterface": "UtilityPrefetchResponse",
+      "params": [
+        {
+          "name": "domain",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "timeoutMS",
+          "type": "number",
+          "required": false
+        }
+      ]
+    },
+    {
+      "resource": "utility",
+      "sdkMethod": "prefetchByEmail",
+      "httpMethod": "POST",
+      "path": "/brand/prefetch-by-email",
+      "paramsInterface": "UtilityPrefetchByEmailParams",
+      "responseInterface": "UtilityPrefetchByEmailResponse",
+      "params": [
+        {
+          "name": "email",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "timeoutMS",
+          "type": "number",
+          "required": false
+        }
+      ]
+    },
+    {
+      "resource": "web",
+      "sdkMethod": "extractCompetitors",
+      "httpMethod": "GET",
+      "path": "/web/competitors",
+      "paramsInterface": "WebExtractCompetitorsParams",
+      "responseInterface": "WebExtractCompetitorsResponse",
+      "params": [
+        {
+          "name": "domain",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "numCompetitors",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "timeoutMS",
+          "type": "number",
+          "required": false
+        }
+      ]
+    },
+    {
+      "resource": "web",
+      "sdkMethod": "webCrawlMd",
+      "httpMethod": "POST",
+      "path": "/web/crawl",
+      "paramsInterface": "WebWebCrawlMdParams",
+      "responseInterface": "WebWebCrawlMdResponse",
+      "params": [
+        {
+          "name": "url",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "followSubdomains",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "includeFrames",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "includeImages",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "includeLinks",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "maxAgeMs",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "maxDepth",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "maxPages",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "pdf",
+          "type": "WebWebCrawlMdParams.Pdf",
+          "required": false
+        },
+        {
+          "name": "shortenBase64Images",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "stopAfterMs",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "timeoutMS",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "urlRegex",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "useMainContentOnly",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "waitForMs",
+          "type": "number",
+          "required": false
+        }
+      ]
+    },
+    {
+      "resource": "web",
+      "sdkMethod": "extract",
+      "httpMethod": "POST",
+      "path": "/web/extract",
+      "paramsInterface": "WebExtractParams",
+      "responseInterface": "WebExtractResponse",
+      "params": [
+        {
+          "name": "schema",
+          "type": "{ [key: string]: unknown }",
+          "required": true
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "factCheck",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "followSubdomains",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "includeFrames",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "instructions",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "maxAgeMs",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "pdf",
+          "type": "WebExtractParams.Pdf",
+          "required": false
+        },
+        {
+          "name": "stopAfterMs",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "timeoutMS",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "waitForMs",
+          "type": "number",
+          "required": false
+        }
+      ]
+    },
+    {
+      "resource": "web",
+      "sdkMethod": "extractFonts",
+      "httpMethod": "GET",
+      "path": "/web/fonts",
+      "paramsInterface": "WebExtractFontsParams",
+      "responseInterface": "WebExtractFontsResponse",
+      "params": [
+        {
+          "name": "directUrl",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "domain",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "maxAgeMs",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "timeoutMS",
+          "type": "number",
+          "required": false
+        }
+      ]
+    },
+    {
+      "resource": "web",
+      "sdkMethod": "webScrapeHTML",
+      "httpMethod": "GET",
+      "path": "/web/scrape/html",
+      "paramsInterface": "WebWebScrapeHTMLParams",
+      "responseInterface": "WebWebScrapeHTMLResponse",
+      "params": [
+        {
+          "name": "url",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "includeFrames",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "maxAgeMs",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "pdf",
+          "type": "WebWebScrapeHTMLParams.Pdf",
+          "required": false
+        },
+        {
+          "name": "timeoutMS",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "waitForMs",
+          "type": "number",
+          "required": false
+        }
+      ]
+    },
+    {
+      "resource": "web",
+      "sdkMethod": "webScrapeImages",
+      "httpMethod": "GET",
+      "path": "/web/scrape/images",
+      "paramsInterface": "WebWebScrapeImagesParams",
+      "responseInterface": "WebWebScrapeImagesResponse",
+      "params": [
+        {
+          "name": "url",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "enrichment",
+          "type": "WebWebScrapeImagesParams.Enrichment",
+          "required": false
+        },
+        {
+          "name": "maxAgeMs",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "timeoutMS",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "waitForMs",
+          "type": "number",
+          "required": false
+        }
+      ]
+    },
+    {
+      "resource": "web",
+      "sdkMethod": "webScrapeMd",
+      "httpMethod": "GET",
+      "path": "/web/scrape/markdown",
+      "paramsInterface": "WebWebScrapeMdParams",
+      "responseInterface": "WebWebScrapeMdResponse",
+      "params": [
+        {
+          "name": "url",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "includeFrames",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "includeImages",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "includeLinks",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "maxAgeMs",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "pdf",
+          "type": "WebWebScrapeMdParams.Pdf",
+          "required": false
+        },
+        {
+          "name": "shortenBase64Images",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "timeoutMS",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "useMainContentOnly",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "waitForMs",
+          "type": "number",
+          "required": false
+        }
+      ]
+    },
+    {
+      "resource": "web",
+      "sdkMethod": "webScrapeSitemap",
+      "httpMethod": "GET",
+      "path": "/web/scrape/sitemap",
+      "paramsInterface": "WebWebScrapeSitemapParams",
+      "responseInterface": "WebWebScrapeSitemapResponse",
+      "params": [
+        {
+          "name": "domain",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "maxLinks",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "timeoutMS",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "urlRegex",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "resource": "web",
+      "sdkMethod": "screenshot",
+      "httpMethod": "GET",
+      "path": "/web/screenshot",
+      "paramsInterface": "WebScreenshotParams",
+      "responseInterface": "WebScreenshotResponse",
+      "params": [
+        {
+          "name": "directUrl",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "domain",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "fullScreenshot",
+          "type": "'true' | 'false'",
+          "required": false
+        },
+        {
+          "name": "handleCookiePopup",
+          "type": "'true' | 'false'",
+          "required": false
+        },
+        {
+          "name": "maxAgeMs",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "page",
+          "type": "'login' | 'signup' | 'blog' | 'careers' | 'pricing' | 'terms' | 'privacy' | 'contact'",
+          "required": false
+        },
+        {
+          "name": "timeoutMS",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "viewport",
+          "type": "WebScreenshotParams.Viewport",
+          "required": false
+        },
+        {
+          "name": "waitForMs",
+          "type": "number",
+          "required": false
+        }
+      ]
+    },
+    {
+      "resource": "web",
+      "sdkMethod": "search",
+      "httpMethod": "POST",
+      "path": "/web/search",
+      "paramsInterface": "WebSearchParams",
+      "responseInterface": "WebSearchResponse",
+      "params": [
+        {
+          "name": "query",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "excludeDomains",
+          "type": "Array<string>",
+          "required": false
+        },
+        {
+          "name": "freshness",
+          "type": "'last_24_hours' | 'last_week' | 'last_month' | 'last_year'",
+          "required": false
+        },
+        {
+          "name": "includeDomains",
+          "type": "Array<string>",
+          "required": false
+        },
+        {
+          "name": "markdownOptions",
+          "type": "WebSearchParams.MarkdownOptions",
+          "required": false
+        },
+        {
+          "name": "queryFanout",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "timeoutMS",
+          "type": "number",
+          "required": false
+        }
+      ]
+    },
+    {
+      "resource": "web",
+      "sdkMethod": "extractStyleguide",
+      "httpMethod": "GET",
+      "path": "/web/styleguide",
+      "paramsInterface": "WebExtractStyleguideParams",
+      "responseInterface": "WebExtractStyleguideResponse",
+      "params": [
+        {
+          "name": "directUrl",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "domain",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "maxAgeMs",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "timeoutMS",
+          "type": "number",
+          "required": false
+        }
+      ]
+    }
+  ]
+}
