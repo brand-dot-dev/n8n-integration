@@ -4,7 +4,6 @@ const show = { resource: ['web'] };
 const searchExtractOps = ['search', 'extract'];
 
 export const searchExtractFields: INodeProperties[] = [
-	// ─── Required inputs ─────────────────────────────────────────────────────
 	{
 		displayName: 'Query',
 		name: 'query',
@@ -36,7 +35,6 @@ export const searchExtractFields: INodeProperties[] = [
 		routing: { request: { body: { url: '={{ $value }}' } } },
 	},
 
-	// ─── Additional Fields ────────────────────────────────────────────────────
 	{
 		displayName: 'Additional Fields',
 		name: 'additionalFields',

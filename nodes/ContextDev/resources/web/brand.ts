@@ -4,7 +4,6 @@ const show = { resource: ['web'] };
 const visualOps = ['screenshot', 'extractStyleguide', 'extractFonts', 'extractCompetitors'];
 
 export const brandFields: INodeProperties[] = [
-	// ─── Required inputs ─────────────────────────────────────────────────────
 	{
 		displayName: 'Domain',
 		name: 'domain',
@@ -16,7 +15,6 @@ export const brandFields: INodeProperties[] = [
 		routing: { request: { qs: { domain: '={{ $value }}' } } },
 	},
 
-	// ─── Additional Fields ────────────────────────────────────────────────────
 	{
 		displayName: 'Additional Fields',
 		name: 'additionalFields',

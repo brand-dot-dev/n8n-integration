@@ -4,7 +4,6 @@ const show = { resource: ['web'] };
 const scrapingOps = ['scrapeMd', 'scrapeHtml', 'scrapeImages', 'crawl', 'scrapeSitemap'];
 
 export const scrapingFields: INodeProperties[] = [
-	// ─── Required inputs ─────────────────────────────────────────────────────
 	{
 		displayName: 'URL',
 		name: 'url',
@@ -36,7 +35,6 @@ export const scrapingFields: INodeProperties[] = [
 		routing: { request: { qs: { domain: '={{ $value }}' } } },
 	},
 
-	// ─── Additional Fields ────────────────────────────────────────────────────
 	{
 		displayName: 'Additional Fields',
 		name: 'additionalFields',
