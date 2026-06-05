@@ -14,8 +14,7 @@ export const utilityDescription: INodeProperties[] = [
 				name: 'Prefetch by Domain',
 				value: 'prefetch',
 				action: 'Warm cache for a domain before retrieval',
-				description:
-					'Signal that you will fetch brand data for this domain soon to reduce latency.',
+				description: 'Signal that you will fetch brand data for this domain soon to reduce latency',
 				routing: { request: { method: 'POST', url: '/brand/prefetch' } },
 			},
 			{

@@ -8,6 +8,7 @@ import type {
 export class ContextdevApi implements ICredentialType {
 	name = 'contextdevApi';
 	displayName = 'Context.dev API';
+	icon = 'file:contextdev.svg' as const;
 	documentationUrl = 'https://docs.context.dev/guides/get-started/quickstart';
 	properties: INodeProperties[] = [
 		{

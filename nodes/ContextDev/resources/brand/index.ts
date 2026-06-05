@@ -11,6 +11,22 @@ export const brandDescription: INodeProperties[] = [
 		displayOptions: { show },
 		options: [
 			{
+				name: 'Identify From Transaction',
+				value: 'identifyFromTransaction',
+				action: 'Identify a brand from transaction data',
+				description:
+					'Match merchant name from bank statement to a brand. <a href="https://docs.context.dev/api-reference/retrieve-brand/identify-brand-from-transaction-data" target="_blank">View docs</a>.',
+				routing: { request: { method: 'GET', url: '/brand/transaction_identifier' } },
+			},
+			{
+				name: 'Retrieve by Company Name',
+				value: 'retrieveByName',
+				action: 'Retrieve brand data by company name',
+				description:
+					'Search by company name and retrieve brand data. <a href="https://docs.context.dev/api-reference/retrieve-brand/retrieve-brand-data-by-company-name" target="_blank">View docs</a>.',
+				routing: { request: { method: 'GET', url: '/brand/retrieve-by-name' } },
+			},
+			{
 				name: 'Retrieve by Domain',
 				value: 'retrieve',
 				action: 'Retrieve brand data by domain',
@@ -27,12 +43,12 @@ export const brandDescription: INodeProperties[] = [
 				routing: { request: { method: 'GET', url: '/brand/retrieve-by-email' } },
 			},
 			{
-				name: 'Retrieve by Company Name',
-				value: 'retrieveByName',
-				action: 'Retrieve brand data by company name',
+				name: 'Retrieve by ISIN',
+				value: 'retrieveByIsin',
+				action: 'Retrieve brand data by ISIN',
 				description:
-					'Search by company name and retrieve brand data. <a href="https://docs.context.dev/api-reference/retrieve-brand/retrieve-brand-data-by-company-name" target="_blank">View docs</a>.',
-				routing: { request: { method: 'GET', url: '/brand/retrieve-by-name' } },
+					'Look up by International Securities Identification Number. <a href="https://docs.context.dev/api-reference/retrieve-brand/retrieve-brand-data-by-isin" target="_blank">View docs</a>.',
+				routing: { request: { method: 'GET', url: '/brand/retrieve-by-isin' } },
 			},
 			{
 				name: 'Retrieve by Stock Ticker',
@@ -43,28 +59,12 @@ export const brandDescription: INodeProperties[] = [
 				routing: { request: { method: 'GET', url: '/brand/retrieve-by-ticker' } },
 			},
 			{
-				name: 'Retrieve by ISIN',
-				value: 'retrieveByIsin',
-				action: 'Retrieve brand data by ISIN',
-				description:
-					'Look up by International Securities Identification Number. <a href="https://docs.context.dev/api-reference/retrieve-brand/retrieve-brand-data-by-isin" target="_blank">View docs</a>.',
-				routing: { request: { method: 'GET', url: '/brand/retrieve-by-isin' } },
-			},
-			{
 				name: 'Retrieve Simplified',
 				value: 'retrieveSimplified',
 				action: 'Retrieve simplified brand data',
 				description:
 					'Faster response with only domain, title, colors, logos, backdrops. <a href="https://docs.context.dev/api-reference/retrieve-brand/retrieve-simplified-brand-data-by-domain" target="_blank">View docs</a>.',
 				routing: { request: { method: 'GET', url: '/brand/retrieve-simplified' } },
-			},
-			{
-				name: 'Identify from Transaction',
-				value: 'identifyFromTransaction',
-				action: 'Identify a brand from transaction data',
-				description:
-					'Match merchant name from bank statement to a brand. <a href="https://docs.context.dev/api-reference/retrieve-brand/identify-brand-from-transaction-data" target="_blank">View docs</a>.',
-				routing: { request: { method: 'GET', url: '/brand/transaction_identifier' } },
 			},
 		],
 		default: 'retrieve',
@@ -162,15 +162,6 @@ export const brandDescription: INodeProperties[] = [
 				routing: { request: { qs: { city: '={{ $value }}' } } },
 			},
 			{
-				displayName: 'Country',
-				name: 'country',
-				type: 'string',
-				displayOptions: { show: { '/operation': ['identifyFromTransaction'] } },
-				default: '',
-				placeholder: 'United States',
-				routing: { request: { qs: { country: '={{ $value }}' } } },
-			},
-			{
 				displayName: 'Country Code',
 				name: 'country_gl',
 				type: 'string',
@@ -218,22 +209,6 @@ export const brandDescription: INodeProperties[] = [
 				routing: { request: { qs: { force_language: '={{ $value }}' } } },
 			},
 			{
-				displayName: 'Latitude',
-				name: 'latitude',
-				type: 'number',
-				displayOptions: { show: { '/operation': ['identifyFromTransaction'] } },
-				default: 0,
-				routing: { request: { qs: { latitude: '={{ $value }}' } } },
-			},
-			{
-				displayName: 'Longitude',
-				name: 'longitude',
-				type: 'number',
-				displayOptions: { show: { '/operation': ['identifyFromTransaction'] } },
-				default: 0,
-				routing: { request: { qs: { longitude: '={{ $value }}' } } },
-			},
-			{
 				displayName: 'Max Age (Ms)',
 				name: 'maxAgeMs',
 				type: 'number',
@@ -259,23 +234,6 @@ export const brandDescription: INodeProperties[] = [
 				placeholder: '5814',
 				description: 'Merchant Category Code',
 				routing: { request: { qs: { mcc: '={{ $value }}' } } },
-			},
-			{
-				displayName: 'Postal Code',
-				name: 'postal_code',
-				type: 'string',
-				displayOptions: { show: { '/operation': ['identifyFromTransaction'] } },
-				default: '',
-				routing: { request: { qs: { postal_code: '={{ $value }}' } } },
-			},
-			{
-				displayName: 'State',
-				name: 'state',
-				type: 'string',
-				displayOptions: { show: { '/operation': ['identifyFromTransaction'] } },
-				default: '',
-				placeholder: 'CA',
-				routing: { request: { qs: { state: '={{ $value }}' } } },
 			},
 			{
 				displayName: 'Ticker Exchange',

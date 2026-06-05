@@ -37,11 +37,11 @@ export class ContextDev implements INodeType {
 				type: 'options',
 				noDataExpression: true,
 				options: [
-					{ name: 'Brand Intelligence', value: 'brand' },
-					{ name: 'Web Scraping', value: 'web' },
 					{ name: 'AI Data Extraction', value: 'aiDataExtraction' },
+					{ name: 'Brand Intelligence', value: 'brand' },
 					{ name: 'Industry Classification', value: 'industry' },
 					{ name: 'Utility', value: 'utility' },
+					{ name: 'Web Scraping', value: 'web' },
 				],
 				default: 'brand',
 			},

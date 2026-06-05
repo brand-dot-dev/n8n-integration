@@ -173,8 +173,8 @@ describe('brand resource', () => {
 			expect(getAdditionalField(brandDescription, 'force_language')).toBeDefined();
 		});
 
-		it('transaction-only fields (mcc, city, state, postal_code, latitude, longitude, country) have /operation scoped to identifyFromTransaction', () => {
-			const txFields = ['mcc', 'city', 'state', 'postal_code', 'latitude', 'longitude', 'country'];
+		it('transaction-only fields (mcc, city, country_gl) have /operation scoped to identifyFromTransaction', () => {
+			const txFields = ['mcc', 'city', 'country_gl'];
 			for (const name of txFields) {
 				const field = getAdditionalField(brandDescription, name);
 				expect(field).toBeDefined();
