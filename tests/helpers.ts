@@ -43,14 +43,18 @@ export function getTopField(desc: INodeProperties[], name: string): INodePropert
 	return desc.find((p) => p.name === name);
 }
 
-/** Field inside additionalFields.options */
+/** Field inside any additionalFields collection (supports multiple collections) */
 export function getAdditionalField(
 	desc: INodeProperties[],
 	name: string,
 ): INodeProperties | undefined {
-	const af = desc.find((p) => p.name === 'additionalFields');
-	if (!af?.options) return undefined;
-	return (af.options as INodeProperties[]).find((p) => p.name === name);
+	const collections = desc.filter((p) => p.name === 'additionalFields');
+	for (const af of collections) {
+		if (!af.options) continue;
+		const found = (af.options as INodeProperties[]).find((p) => p.name === name);
+		if (found) return found;
+	}
+	return undefined;
 }
 
 /** All top-level fields with a given name (there can be multiple for GET vs POST routing) */

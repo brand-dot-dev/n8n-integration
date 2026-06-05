@@ -175,28 +175,21 @@ describe('web resource', () => {
 			expect(showsForOperations(field)).toEqual(['extract']);
 		});
 
-		it('domain field shows for scrapeSitemap, screenshot, extractStyleguide, extractFonts, extractCompetitors', () => {
-			const domainField = getAllTopFields(webDescription, 'domain').find((f) =>
-				showsForOperations(f).includes('scrapeSitemap'),
-			);
-			expect(domainField).toBeDefined();
-			const ops = showsForOperations(domainField!);
-			expect(ops).toContain('scrapeSitemap');
-			expect(ops).toContain('screenshot');
-			expect(ops).toContain('extractStyleguide');
-			expect(ops).toContain('extractFonts');
-			expect(ops).toContain('extractCompetitors');
+		it('domain field covers scrapeSitemap, screenshot, extractStyleguide, extractFonts, extractCompetitors (across all domain fields)', () => {
+			const allOps = getAllTopFields(webDescription, 'domain').flatMap((f) => showsForOperations(f));
+			expect(allOps).toContain('scrapeSitemap');
+			expect(allOps).toContain('screenshot');
+			expect(allOps).toContain('extractStyleguide');
+			expect(allOps).toContain('extractFonts');
+			expect(allOps).toContain('extractCompetitors');
 		});
 
 		it('domain field does NOT show for scrapeMd, crawl, search, extract', () => {
-			const domainField = getAllTopFields(webDescription, 'domain').find((f) =>
-				showsForOperations(f).includes('scrapeSitemap'),
-			)!;
-			const ops = showsForOperations(domainField);
-			expect(ops).not.toContain('scrapeMd');
-			expect(ops).not.toContain('crawl');
-			expect(ops).not.toContain('search');
-			expect(ops).not.toContain('extract');
+			const allOps = getAllTopFields(webDescription, 'domain').flatMap((f) => showsForOperations(f));
+			expect(allOps).not.toContain('scrapeMd');
+			expect(allOps).not.toContain('crawl');
+			expect(allOps).not.toContain('search');
+			expect(allOps).not.toContain('extract');
 		});
 	});
 
