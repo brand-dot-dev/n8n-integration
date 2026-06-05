@@ -1,6 +1,6 @@
 import type { INodeProperties } from 'n8n-workflow';
 import { scrapingFields } from './scraping';
-import { visualFields } from './visual';
+import { brandFields } from './brand';
 import { searchExtractFields } from './searchExtract';
 
 const show = { resource: ['web'] };
@@ -106,6 +106,6 @@ const operationField: INodeProperties = {
 export const webDescription: INodeProperties[] = [
 	operationField,
 	...scrapingFields,   // scrapeMd, scrapeHtml, scrapeImages, crawl, scrapeSitemap
-	...visualFields,     // screenshot, extractStyleguide, extractFonts, extractCompetitors
+	...brandFields,     // screenshot, extractStyleguide, extractFonts, extractCompetitors
 	...searchExtractFields, // search, extract
 ];

@@ -3,7 +3,7 @@ import type { INodeProperties } from 'n8n-workflow';
 const show = { resource: ['web'] };
 const visualOps = ['screenshot', 'extractStyleguide', 'extractFonts', 'extractCompetitors'];
 
-export const visualFields: INodeProperties[] = [
+export const brandFields: INodeProperties[] = [
 	// ─── Required inputs ─────────────────────────────────────────────────────
 	{
 		displayName: 'Domain',
