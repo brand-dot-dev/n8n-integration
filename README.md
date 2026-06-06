@@ -143,16 +143,6 @@ The node will automatically test the credentials by making a test request to the
 - The node supports n8n's **Usable as AI Tool** feature, making it compatible with AI agent workflows
 - Combine **Extract Competitors** + **Retrieve by Domain** in a loop to build a competitive intelligence pipeline
 
-## Differences from Zapier / Make
-
-The Context.dev n8n node exposes **more operations** than the equivalent Zapier or Make integrations:
-
-- **Web Scraping** — Zapier/Make do not expose the full scraping suite (crawl, sitemap, markdown, HTML, images, search, structured extraction)
-- **AI Data Extraction** — the AI Query and product extraction operations are n8n-exclusive
-- **Utility** — prefetch operations for cache warming are available only in n8n
-- **Industry Classification** — both NAICS and SIC classification are available; Make only exposes NAICS
-- **Brand Intelligence** — all seven lookup methods (domain, simplified, name, email, ticker, ISIN, transaction) are available; Zapier exposes a subset
-
 ## Migrating from n8n-nodes-branddev
 
 This package replaces `n8n-nodes-branddev`. The underlying service has migrated from Brand.dev to Context.dev.
