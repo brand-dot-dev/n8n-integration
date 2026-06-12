@@ -62,6 +62,22 @@ export function getAllTopFields(desc: INodeProperties[], name: string): INodePro
 	return desc.filter((p) => p.name === name);
 }
 
+/** additionalField with a given name scoped to a specific operation (disambiguates duplicates) */
+export function getAdditionalFieldFor(
+	desc: INodeProperties[],
+	name: string,
+	op: string,
+): INodeProperties | undefined {
+	const collections = desc.filter((p) => p.name === 'additionalFields');
+	for (const af of collections) {
+		const found = (af.options as INodeProperties[] | undefined)?.find(
+			(p) => p.name === name && additionalFieldShowsFor(p).includes(op),
+		);
+		if (found) return found;
+	}
+	return undefined;
+}
+
 export function usesQsRouting(field: INodeProperties): boolean {
 	return !!field.routing?.request?.qs;
 }
@@ -84,10 +100,7 @@ export function additionalFieldShowsFor(field: INodeProperties): string[] {
 
 // ─── fixedCollection helpers ──────────────────────────────────────────────────
 
-export function getFixedCollectionValues(
-	desc: INodeProperties[],
-	name: string,
-): INodeProperties[] {
+export function getFixedCollectionValues(desc: INodeProperties[], name: string): INodeProperties[] {
 	const field = desc.find((p) => p.name === name);
 	if (!field?.options) return [];
 	const group = (field.options as { values: INodeProperties[] }[])[0];
@@ -108,6 +121,11 @@ export function bodyKeyFor(field: INodeProperties): string | undefined {
 	const body = field.routing?.request?.body;
 	if (!body) return undefined;
 	return Object.keys(body)[0];
+}
+
+/** Get the arrayFormat set on a field's routing.request (controls qs array serialization) */
+export function arrayFormatFor(field: INodeProperties): string | undefined {
+	return (field.routing?.request as { arrayFormat?: string } | undefined)?.arrayFormat;
 }
 
 /** Every INodeProperties in a description, including nested options */

@@ -110,7 +110,7 @@ export const scrapingFields: INodeProperties[] = [
 				displayName: 'Main Content Only',
 				name: 'useMainContentOnly',
 				type: 'boolean',
-				displayOptions: { show: { '/operation': ['scrapeMd'] } },
+				displayOptions: { show: { '/operation': ['scrapeMd', 'scrapeHtml'] } },
 				default: false,
 				description: 'Strip navigation, headers, and footers — return only the main body content',
 				routing: { request: { qs: { useMainContentOnly: '={{ $value }}' } } },
@@ -125,10 +125,104 @@ export const scrapingFields: INodeProperties[] = [
 				routing: { request: { body: { useMainContentOnly: '={{ $value }}' } } },
 			},
 			{
+				displayName: 'Include Selectors',
+				name: 'includeSelectors',
+				type: 'string',
+				displayOptions: { show: { '/operation': ['scrapeMd', 'scrapeHtml'] } },
+				default: '',
+				description:
+					'Comma-separated CSS selectors. When set, only matching subtrees are kept (e.g. "article.main, #content").',
+				routing: {
+					request: {
+						qs: { includeSelectors: '={{ $value.split(",").map(s => s.trim()).filter(Boolean) }}' },
+						arrayFormat: 'comma',
+					},
+				},
+			},
+			{
+				displayName: 'Include Selectors',
+				name: 'includeSelectorsPost',
+				type: 'string',
+				displayOptions: { show: { '/operation': ['crawl'] } },
+				default: '',
+				description:
+					'Comma-separated CSS selectors. When set, only matching subtrees are kept (e.g. "article.main, #content").',
+				routing: {
+					request: {
+						body: {
+							includeSelectors: '={{ $value.split(",").map(s => s.trim()).filter(Boolean) }}',
+						},
+					},
+				},
+			},
+			{
+				displayName: 'Exclude Selectors',
+				name: 'excludeSelectors',
+				type: 'string',
+				displayOptions: { show: { '/operation': ['scrapeMd', 'scrapeHtml'] } },
+				default: '',
+				description:
+					'Comma-separated CSS selectors to remove before extraction (e.g. "nav, footer, .ad-banner").',
+				routing: {
+					request: {
+						qs: { excludeSelectors: '={{ $value.split(",").map(s => s.trim()).filter(Boolean) }}' },
+						arrayFormat: 'comma',
+					},
+				},
+			},
+			{
+				displayName: 'Exclude Selectors',
+				name: 'excludeSelectorsPost',
+				type: 'string',
+				displayOptions: { show: { '/operation': ['crawl'] } },
+				default: '',
+				description:
+					'Comma-separated CSS selectors to remove before extraction (e.g. "nav, footer, .ad-banner").',
+				routing: {
+					request: {
+						body: {
+							excludeSelectors: '={{ $value.split(",").map(s => s.trim()).filter(Boolean) }}',
+						},
+					},
+				},
+			},
+			{
+				displayName: 'Custom Headers',
+				name: 'headers',
+				type: 'fixedCollection',
+				typeOptions: { multipleValues: true },
+				default: {},
+				displayOptions: {
+					show: { '/operation': ['scrapeMd', 'scrapeHtml', 'scrapeImages', 'scrapeSitemap'] },
+				},
+				description:
+					'Custom HTTP headers forwarded to the target URL. Sending headers bypasses the cache.',
+				options: [
+					{
+						name: 'header',
+						displayName: 'Header',
+						values: [
+							{ displayName: 'Name', name: 'name', type: 'string', default: '' },
+							{ displayName: 'Value', name: 'value', type: 'string', default: '' },
+						],
+					},
+				],
+				routing: {
+					request: {
+						qs: {
+							headers:
+								'={{ Object.fromEntries(($value.header || []).map(h => [h.name, h.value])) }}',
+						},
+					},
+				},
+			},
+			{
 				displayName: 'Max Age (Ms)',
 				name: 'maxAgeMs',
 				type: 'number',
-				displayOptions: { show: { '/operation': ['scrapeMd', 'scrapeHtml', 'scrapeImages', 'scrapeSitemap'] } },
+				displayOptions: {
+					show: { '/operation': ['scrapeMd', 'scrapeHtml', 'scrapeImages', 'scrapeSitemap'] },
+				},
 				default: 86400000,
 				description: 'Max age of cached result in ms before a fresh fetch. Default 1 day.',
 				routing: { request: { qs: { maxAgeMs: '={{ $value }}' } } },
@@ -148,7 +242,8 @@ export const scrapingFields: INodeProperties[] = [
 				type: 'number',
 				displayOptions: { show: { '/operation': ['crawl'] } },
 				default: 3,
-				description: 'How many link levels deep to crawl from the starting URL. 0 = starting page only.',
+				description:
+					'How many link levels deep to crawl from the starting URL. 0 = starting page only.',
 				typeOptions: { minValue: 0 },
 				routing: { request: { body: { maxDepth: '={{ $value }}' } } },
 			},
@@ -178,7 +273,8 @@ export const scrapingFields: INodeProperties[] = [
 				type: 'number',
 				displayOptions: { show: { '/operation': ['crawl'] } },
 				default: 80000,
-				description: 'Stop the crawl after this many milliseconds, returning pages collected so far. Between 10,000 and 110,000 ms.',
+				description:
+					'Stop the crawl after this many milliseconds, returning pages collected so far. Between 10,000 and 110,000 ms.',
 				typeOptions: { minValue: 10000, maxValue: 110000 },
 				routing: { request: { body: { stopAfterMs: '={{ $value }}' } } },
 			},
@@ -186,9 +282,12 @@ export const scrapingFields: INodeProperties[] = [
 				displayName: 'Timeout (Ms)',
 				name: 'timeoutMS',
 				type: 'number',
-				displayOptions: { show: { '/operation': ['scrapeMd', 'scrapeHtml', 'scrapeImages', 'scrapeSitemap'] } },
+				displayOptions: {
+					show: { '/operation': ['scrapeMd', 'scrapeHtml', 'scrapeImages', 'scrapeSitemap'] },
+				},
 				default: 30000,
-				description: 'Maximum time in milliseconds to wait for a response before the request fails.',
+				description:
+					'Maximum time in milliseconds to wait for a response before the request fails.',
 				typeOptions: { minValue: 1, maxValue: 300000 },
 				routing: { request: { qs: { timeoutMS: '={{ $value }}' } } },
 			},
@@ -198,7 +297,8 @@ export const scrapingFields: INodeProperties[] = [
 				type: 'number',
 				displayOptions: { show: { '/operation': ['crawl'] } },
 				default: 30000,
-				description: 'Maximum time in milliseconds to wait for a response before the request fails.',
+				description:
+					'Maximum time in milliseconds to wait for a response before the request fails.',
 				typeOptions: { minValue: 1, maxValue: 300000 },
 				routing: { request: { body: { timeoutMS: '={{ $value }}' } } },
 			},
@@ -228,7 +328,8 @@ export const scrapingFields: INodeProperties[] = [
 				type: 'number',
 				displayOptions: { show: { '/operation': ['scrapeMd', 'scrapeHtml', 'scrapeImages'] } },
 				default: 0,
-				description: 'Delay scraping by this many milliseconds after page load — useful for pages with delayed JavaScript rendering. Max 30,000 ms.',
+				description:
+					'Delay scraping by this many milliseconds after page load — useful for pages with delayed JavaScript rendering. Max 30,000 ms.',
 				typeOptions: { minValue: 0, maxValue: 30000 },
 				routing: { request: { qs: { waitForMs: '={{ $value }}' } } },
 			},
@@ -238,7 +339,8 @@ export const scrapingFields: INodeProperties[] = [
 				type: 'number',
 				displayOptions: { show: { '/operation': ['crawl'] } },
 				default: 0,
-				description: 'Delay scraping by this many milliseconds after page load — useful for pages with delayed JavaScript rendering. Max 30,000 ms.',
+				description:
+					'Delay scraping by this many milliseconds after page load — useful for pages with delayed JavaScript rendering. Max 30,000 ms.',
 				typeOptions: { minValue: 0, maxValue: 30000 },
 				routing: { request: { body: { waitForMs: '={{ $value }}' } } },
 			},

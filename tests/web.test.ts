@@ -14,6 +14,8 @@ import {
 	additionalFieldShowsFor,
 	qsKeyFor,
 	bodyKeyFor,
+	arrayFormatFor,
+	getAdditionalFieldFor,
 } from './helpers';
 
 describe('web resource', () => {
@@ -149,7 +151,8 @@ describe('web resource', () => {
 	describe('displayOptions scoping', () => {
 		it('GET url field does NOT show for crawl or extract (POST ops)', () => {
 			const getUrlField = getAllTopFields(webDescription, 'url').find(
-				(f) => showsForOperations(f).includes('scrapeMd') && !showsForOperations(f).includes('crawl'),
+				(f) =>
+					showsForOperations(f).includes('scrapeMd') && !showsForOperations(f).includes('crawl'),
 			);
 			expect(getUrlField).toBeDefined();
 			expect(showsForOperations(getUrlField!)).not.toContain('crawl');
@@ -176,7 +179,9 @@ describe('web resource', () => {
 		});
 
 		it('domain field covers scrapeSitemap, screenshot, extractStyleguide, extractFonts, extractCompetitors (across all domain fields)', () => {
-			const allOps = getAllTopFields(webDescription, 'domain').flatMap((f) => showsForOperations(f));
+			const allOps = getAllTopFields(webDescription, 'domain').flatMap((f) =>
+				showsForOperations(f),
+			);
 			expect(allOps).toContain('scrapeSitemap');
 			expect(allOps).toContain('screenshot');
 			expect(allOps).toContain('extractStyleguide');
@@ -185,7 +190,9 @@ describe('web resource', () => {
 		});
 
 		it('domain field does NOT show for scrapeMd, crawl, search, extract', () => {
-			const allOps = getAllTopFields(webDescription, 'domain').flatMap((f) => showsForOperations(f));
+			const allOps = getAllTopFields(webDescription, 'domain').flatMap((f) =>
+				showsForOperations(f),
+			);
 			expect(allOps).not.toContain('scrapeMd');
 			expect(allOps).not.toContain('crawl');
 			expect(allOps).not.toContain('search');
@@ -198,7 +205,8 @@ describe('web resource', () => {
 	describe('field routing — GET params in qs, POST params in body', () => {
 		it('GET url field uses qs routing', () => {
 			const getUrlField = getAllTopFields(webDescription, 'url').find(
-				(f) => showsForOperations(f).includes('scrapeMd') && !showsForOperations(f).includes('crawl'),
+				(f) =>
+					showsForOperations(f).includes('scrapeMd') && !showsForOperations(f).includes('crawl'),
 			)!;
 			expect(usesQsRouting(getUrlField)).toBe(true);
 		});
@@ -327,7 +335,8 @@ describe('web resource', () => {
 	describe('routing key names match API param names', () => {
 		it('GET url field sends key "url"', () => {
 			const getUrlField = getAllTopFields(webDescription, 'url').find(
-				(f) => showsForOperations(f).includes('scrapeMd') && !showsForOperations(f).includes('crawl'),
+				(f) =>
+					showsForOperations(f).includes('scrapeMd') && !showsForOperations(f).includes('crawl'),
 			)!;
 			expect(qsKeyFor(getUrlField)).toBe('url');
 		});
@@ -365,6 +374,120 @@ describe('web resource', () => {
 				.filter((p) => p.name !== 'operation')
 				.filter((p) => p.default === undefined);
 			expect(missing.map((p) => p.name)).toEqual([]);
+		});
+	});
+
+	// ─── Selector & header params (SDK 1.34) — wire-contract guarantees ─────────
+	//
+	// The OpenAPI marks includeSelectors/excludeSelectors as style:deepObject, but the
+	// official Stainless SDK ignores style/explode and serializes EVERY query param via
+	// qs.stringify(query, { arrayFormat: 'comma' }). So the real server contract is
+	// comma-joined:  includeSelectors: ['a','b']  ->  includeSelectors=a%2Cb
+	// n8n uses the same qs lib, so arrayFormat:'comma' on the GET fields makes the node
+	// byte-identical to the SDK. On crawl (POST) the params ride in the JSON body as a
+	// plain array, so no qs/arrayFormat applies. These tests lock that contract.
+
+	describe('selector & header params (SDK 1.34) — wire-contract guarantees', () => {
+		describe.each(['includeSelectors', 'excludeSelectors'])('%s — GET ops (qs array)', (name) => {
+			it('is scoped to scrapeMd + scrapeHtml', () => {
+				const f = getAdditionalField(webDescription, name);
+				expect(f).toBeDefined();
+				expect(additionalFieldShowsFor(f!).sort()).toEqual(['scrapeHtml', 'scrapeMd']);
+			});
+
+			it(`routes to qs key "${name}"`, () => {
+				expect(qsKeyFor(getAdditionalField(webDescription, name)!)).toBe(name);
+			});
+
+			it('sets arrayFormat "comma" (byte-identical to the SDK)', () => {
+				expect(arrayFormatFor(getAdditionalField(webDescription, name)!)).toBe('comma');
+			});
+
+			it('splits the input into an array before serialization', () => {
+				const f = getAdditionalField(webDescription, name)!;
+				const expr = (f.routing!.request!.qs as Record<string, string>)[name];
+				expect(expr).toContain('.split(",")');
+			});
+		});
+
+		describe.each(['includeSelectorsPost', 'excludeSelectorsPost'])(
+			'%s — crawl (JSON body array)',
+			(name) => {
+				const apiKey = name.replace('Post', '');
+
+				it('is scoped to crawl only', () => {
+					expect(additionalFieldShowsFor(getAdditionalField(webDescription, name)!)).toEqual([
+						'crawl',
+					]);
+				});
+
+				it(`routes to body key "${apiKey}"`, () => {
+					expect(bodyKeyFor(getAdditionalField(webDescription, name)!)).toBe(apiKey);
+				});
+
+				it('does NOT set arrayFormat (body is JSON, not a query string)', () => {
+					expect(arrayFormatFor(getAdditionalField(webDescription, name)!)).toBeUndefined();
+				});
+			},
+		);
+
+		describe('headers — deep-object map', () => {
+			it('is a fixedCollection scoped to the four GET scrape ops', () => {
+				const f = getAdditionalField(webDescription, 'headers')!;
+				expect(f.type).toBe('fixedCollection');
+				expect(additionalFieldShowsFor(f).sort()).toEqual([
+					'scrapeHtml',
+					'scrapeImages',
+					'scrapeMd',
+					'scrapeSitemap',
+				]);
+			});
+
+			it('routes to qs key "headers"', () => {
+				expect(qsKeyFor(getAdditionalField(webDescription, 'headers')!)).toBe('headers');
+			});
+
+			it('exposes Name and Value sub-fields', () => {
+				const f = getAdditionalField(webDescription, 'headers')!;
+				const values = (f.options as Array<{ values: Array<{ name: string }> }>)[0].values;
+				expect(values.map((v) => v.name)).toEqual(['name', 'value']);
+			});
+
+			it('builds an object via Object.fromEntries (-> headers[Key]=Value)', () => {
+				const f = getAdditionalField(webDescription, 'headers')!;
+				const expr = (f.routing!.request!.qs as Record<string, string>).headers;
+				expect(expr).toContain('Object.fromEntries');
+			});
+		});
+
+		describe('useMainContentOnly extended to scrapeHtml (1.34)', () => {
+			it('GET field shows for scrapeMd + scrapeHtml', () => {
+				const f = getAdditionalField(webDescription, 'useMainContentOnly')!;
+				expect(additionalFieldShowsFor(f).sort()).toEqual(['scrapeHtml', 'scrapeMd']);
+			});
+		});
+	});
+
+	// ─── extract gained maxDepth + maxPages (SDK 1.34) ──────────────────────────
+	// These param names already existed on crawl, so they need operation-scoped
+	// lookup. Extract's maxPages cap is 50; crawl's is 500 — distinct bounds.
+	describe('extract crawl-control params (SDK 1.34)', () => {
+		it('maxDepth is exposed for extract and routes to body', () => {
+			const f = getAdditionalFieldFor(webDescription, 'maxDepth', 'extract');
+			expect(f).toBeDefined();
+			expect(bodyKeyFor(f!)).toBe('maxDepth');
+		});
+
+		it('maxPages is exposed for extract, routes to body, capped at 50', () => {
+			const f = getAdditionalFieldFor(webDescription, 'maxPages', 'extract');
+			expect(f).toBeDefined();
+			expect(bodyKeyFor(f!)).toBe('maxPages');
+			expect((f!.typeOptions as { maxValue?: number }).maxValue).toBe(50);
+		});
+
+		it('crawl maxPages keeps its own 500 cap (distinct bound)', () => {
+			const f = getAdditionalFieldFor(webDescription, 'maxPages', 'crawl');
+			expect((f!.typeOptions as { maxValue?: number }).maxValue).toBe(500);
 		});
 	});
 });
