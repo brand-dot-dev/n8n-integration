@@ -51,7 +51,11 @@ export const searchExtractFields: INodeProperties[] = [
 				default: '',
 				placeholder: 'pinterest.com,reddit.com',
 				description: 'Comma-separated blocklist of domains to exclude from results',
-				routing: { request: { body: { excludeDomains: '={{ $value.split(",").map(s => s.trim()).filter(Boolean) }}' } } },
+				routing: {
+					request: {
+						body: { excludeDomains: '={{ $value.split(",").map(s => s.trim()).filter(Boolean) }}' },
+					},
+				},
 			},
 			{
 				displayName: 'Fact Check',
@@ -94,7 +98,11 @@ export const searchExtractFields: INodeProperties[] = [
 				default: '',
 				placeholder: 'arxiv.org,github.com',
 				description: 'Comma-separated allowlist — only return results from these domains',
-				routing: { request: { body: { includeDomains: '={{ $value.split(",").map(s => s.trim()).filter(Boolean) }}' } } },
+				routing: {
+					request: {
+						body: { includeDomains: '={{ $value.split(",").map(s => s.trim()).filter(Boolean) }}' },
+					},
+				},
 			},
 			{
 				displayName: 'Include Frames',
@@ -111,7 +119,8 @@ export const searchExtractFields: INodeProperties[] = [
 				type: 'string',
 				displayOptions: { show: { '/operation': ['extract'] } },
 				default: '',
-				description: 'Optional guidance on which facts to prioritize or how to interpret schema fields',
+				description:
+					'Optional guidance on which facts to prioritize or how to interpret schema fields',
 				routing: { request: { body: { instructions: '={{ $value }}' } } },
 			},
 			{
@@ -122,6 +131,27 @@ export const searchExtractFields: INodeProperties[] = [
 				default: 86400000,
 				description: 'Max age of cached result in ms before a fresh fetch. Default 1 day.',
 				routing: { request: { body: { maxAgeMs: '={{ $value }}' } } },
+			},
+			{
+				displayName: 'Max Depth',
+				name: 'maxDepth',
+				type: 'number',
+				displayOptions: { show: { '/operation': ['extract'] } },
+				default: 3,
+				description:
+					'Maximum link depth to crawl from the starting URL during extraction. 0 = starting page only.',
+				typeOptions: { minValue: 0 },
+				routing: { request: { body: { maxDepth: '={{ $value }}' } } },
+			},
+			{
+				displayName: 'Max Pages',
+				name: 'maxPages',
+				type: 'number',
+				displayOptions: { show: { '/operation': ['extract'] } },
+				default: 5,
+				description: 'Maximum number of pages to analyze for extraction. Hard cap: 50.',
+				typeOptions: { minValue: 1, maxValue: 50 },
+				routing: { request: { body: { maxPages: '={{ $value }}' } } },
 			},
 			{
 				displayName: 'Query Fanout',
@@ -138,7 +168,8 @@ export const searchExtractFields: INodeProperties[] = [
 				type: 'boolean',
 				displayOptions: { show: { '/operation': ['search'] } },
 				default: false,
-				description: 'Scrape each search result page and include the full content as Markdown. Significantly increases response time.',
+				description:
+					'Scrape each search result page and include the full content as Markdown. Significantly increases response time.',
 				routing: { send: { type: 'body', property: 'markdownOptions.enabled' } },
 			},
 			{
@@ -147,7 +178,8 @@ export const searchExtractFields: INodeProperties[] = [
 				type: 'number',
 				displayOptions: { show: { '/operation': ['extract'] } },
 				default: 80000,
-				description: 'Stop the extraction crawl after this many milliseconds, returning data collected so far. Between 10,000 and 110,000 ms.',
+				description:
+					'Stop the extraction crawl after this many milliseconds, returning data collected so far. Between 10,000 and 110,000 ms.',
 				typeOptions: { minValue: 10000, maxValue: 110000 },
 				routing: { request: { body: { stopAfterMs: '={{ $value }}' } } },
 			},
@@ -156,7 +188,8 @@ export const searchExtractFields: INodeProperties[] = [
 				name: 'timeoutMS',
 				type: 'number',
 				default: 30000,
-				description: 'Maximum time in milliseconds to wait for a response before the request fails.',
+				description:
+					'Maximum time in milliseconds to wait for a response before the request fails.',
 				typeOptions: { minValue: 1, maxValue: 300000 },
 				routing: { request: { body: { timeoutMS: '={{ $value }}' } } },
 			},
