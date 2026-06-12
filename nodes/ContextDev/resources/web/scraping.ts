@@ -177,9 +177,9 @@ export const scrapingFields: INodeProperties[] = [
 				name: 'stopAfterMs',
 				type: 'number',
 				displayOptions: { show: { '/operation': ['crawl'] } },
-				default: 120000,
-				description: 'Stop the crawl after this many milliseconds, returning pages collected so far. Between 10,000 and 240,000 ms.',
-				typeOptions: { minValue: 10000, maxValue: 240000 },
+				default: 80000,
+				description: 'Stop the crawl after this many milliseconds, returning pages collected so far. Between 10,000 and 110,000 ms.',
+				typeOptions: { minValue: 10000, maxValue: 110000 },
 				routing: { request: { body: { stopAfterMs: '={{ $value }}' } } },
 			},
 			{
