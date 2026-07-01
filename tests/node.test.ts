@@ -131,8 +131,8 @@ describe('ContextDev node', () => {
 			expect(resourceProp().noDataExpression).toBe(true);
 		});
 
-		it('has exactly 5 resources', () => {
-			expect(resourceValues()).toHaveLength(5);
+		it('has exactly 6 resources', () => {
+			expect(resourceValues()).toHaveLength(6);
 		});
 
 		it('includes brand', () => expect(resourceValues()).toContain('brand'));
@@ -140,6 +140,7 @@ describe('ContextDev node', () => {
 		it('includes aiDataExtraction', () => expect(resourceValues()).toContain('aiDataExtraction'));
 		it('includes industry', () => expect(resourceValues()).toContain('industry'));
 		it('includes utility (new)', () => expect(resourceValues()).toContain('utility'));
+		it('includes monitors (new)', () => expect(resourceValues()).toContain('monitors'));
 
 		it('does NOT include screenshot (merged into web)', () => {
 			expect(resourceValues()).not.toContain('screenshot');
