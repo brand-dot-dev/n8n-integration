@@ -262,4 +262,34 @@ describe('aiDataExtraction resource', () => {
 			expect(missing.map((p) => p.name)).toEqual([]);
 		});
 	});
+
+	describe('specific_pages (aiQuery)', () => {
+		const field = () => getTopField(aiDataExtractionDescription, 'specificPages')!;
+
+		it('is a collection scoped to aiQuery', () => {
+			expect(field()).toBeDefined();
+			expect(field().type).toBe('collection');
+			expect(showsForOperations(field())).toEqual(['aiQuery']);
+		});
+
+		it('exposes all 9 SDK page flags, each routing specific_pages.<name>', () => {
+			const opts = field().options as { name: string; routing: { send: { property: string } } }[];
+			const names = opts.map((o) => o.name).sort();
+			expect(names).toEqual(
+				[
+					'about_us',
+					'blog',
+					'careers',
+					'contact_us',
+					'faq',
+					'home_page',
+					'pricing',
+					'privacy_policy',
+					'terms_and_conditions',
+				].sort(),
+			);
+			for (const o of opts)
+				expect(o.routing.send.property).toBe(`specific_pages.${o.name}`);
+		});
+	});
 });

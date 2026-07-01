@@ -333,15 +333,6 @@ const createCore: INodeProperties[] = [
 		displayOptions: { show: { ...show, operation: ['create'] } },
 		options: [
 			{
-				displayName: 'Webhook URL',
-				name: 'webhookUrl',
-				type: 'string',
-				default: '',
-				placeholder: 'https://example.com/hooks/context',
-				description: 'URL called when a change is detected',
-				routing: { send: { type: 'body', property: 'webhook.url' } },
-			},
-			{
 				displayName: 'Tags',
 				name: 'tags',
 				type: 'string',
@@ -349,6 +340,25 @@ const createCore: INodeProperties[] = [
 				placeholder: 'pricing,marketing',
 				description: 'Comma-separated tags for grouping and filtering monitors and their changes',
 				routing: tagsRouting,
+			},
+			{
+				displayName: 'Webhook Secret',
+				name: 'webhookSecret',
+				type: 'string',
+				typeOptions: { password: true },
+				default: '',
+				description:
+					'Signing secret used to verify webhook authenticity (each delivery is HMAC-signed with it)',
+				routing: { send: { type: 'body', property: 'webhook.secret' } },
+			},
+			{
+				displayName: 'Webhook URL',
+				name: 'webhookUrl',
+				type: 'string',
+				default: '',
+				placeholder: 'https://example.com/hooks/context',
+				description: 'URL called when a change is detected',
+				routing: { send: { type: 'body', property: 'webhook.url' } },
 			},
 		],
 	},
@@ -574,6 +584,15 @@ const updateFields: INodeProperties[] = [
 				type: 'string',
 				default: '',
 				routing: { send: { type: 'body', property: 'target.url' } },
+			},
+			{
+				displayName: 'Webhook Secret',
+				name: 'updWebhookSecret',
+				type: 'string',
+				typeOptions: { password: true },
+				default: '',
+				description: 'Signing secret used to verify webhook authenticity',
+				routing: { send: { type: 'body', property: 'webhook.secret' } },
 			},
 			{
 				displayName: 'Webhook URL',

@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-context-dev",
-  "version": "3.0.4",
+  "version": "3.0.5",
   "description": "n8n community node for Context.dev API — brand intelligence, web scraping, industry classification, and AI data extraction",
   "license": "MIT",
   "homepage": "https://github.com/context-dot-dev/n8n-integration#readme",

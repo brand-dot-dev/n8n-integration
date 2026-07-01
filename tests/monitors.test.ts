@@ -231,6 +231,12 @@ describe('monitors resource', () => {
 			expect(sendOf(f)!.property).toBe('webhook.url');
 		});
 
+		it('webhookSecret (create) sends webhook.secret', () => {
+			const f = getAdditionalField(monitorsDescription, 'webhookSecret')!;
+			expect(f).toBeDefined();
+			expect(sendOf(f)!.property).toBe('webhook.secret');
+		});
+
 		it('tags splits csv into a string array on body key "tags"', () => {
 			const f = getAdditionalField(monitorsDescription, 'tags')!;
 			expect(f).toBeDefined();
@@ -263,6 +269,7 @@ describe('monitors resource', () => {
 		it.each([
 			['updName', 'name'],
 			['updWebhookUrl', 'webhook.url'],
+			['updWebhookSecret', 'webhook.secret'],
 			['updQuery', 'change_detection.query'],
 			['updExtractInstructions', 'target.instructions'],
 			['updExtractSchema', 'target.schema'],
