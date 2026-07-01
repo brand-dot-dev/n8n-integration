@@ -154,6 +154,42 @@ export const searchExtractFields: INodeProperties[] = [
 				routing: { request: { body: { maxPages: '={{ $value }}' } } },
 			},
 			{
+				displayName: 'PDF Parsing',
+				name: 'pdf',
+				type: 'collection',
+				placeholder: 'Add PDF Option',
+				default: {},
+				displayOptions: { show: { '/operation': ['extract'] } },
+				description: 'Control how linked PDF documents are fetched and parsed',
+				options: [
+					{
+						displayName: 'End Page',
+						name: 'end',
+						type: 'number',
+						default: 1,
+						description: 'Last 1-based PDF page to parse. Must be greater than or equal to Start Page.',
+						typeOptions: { minValue: 1 },
+					},
+					{
+						displayName: 'Should Parse',
+						name: 'shouldParse',
+						type: 'boolean',
+						default: true,
+						description:
+							'Whether PDF pages are fetched and parsed. When false, PDF pages are skipped.',
+					},
+					{
+						displayName: 'Start Page',
+						name: 'start',
+						type: 'number',
+						default: 1,
+						description: 'First 1-based PDF page to parse',
+						typeOptions: { minValue: 1 },
+					},
+				],
+				routing: { request: { body: { pdf: '={{ $value }}' } } },
+			},
+			{
 				displayName: 'Query Fanout',
 				name: 'queryFanout',
 				type: 'boolean',

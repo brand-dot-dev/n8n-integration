@@ -173,13 +173,25 @@ describe('brand resource', () => {
 			expect(getAdditionalField(brandDescription, 'force_language')).toBeDefined();
 		});
 
-		it('transaction-only fields (mcc, city, country_gl) have /operation scoped to identifyFromTransaction', () => {
-			const txFields = ['mcc', 'city', 'country_gl'];
+		it('transaction-only fields (mcc, city, country_gl, phone, high_confidence_only) have /operation scoped to identifyFromTransaction', () => {
+			const txFields = ['mcc', 'city', 'country_gl', 'phone', 'high_confidence_only'];
 			for (const name of txFields) {
 				const field = getAdditionalField(brandDescription, name);
 				expect(field).toBeDefined();
 				expect(additionalFieldShowsFor(field!)).toEqual(['identifyFromTransaction']);
 			}
+		});
+
+		it('phone is a string routing qs key "phone"', () => {
+			const field = getAdditionalField(brandDescription, 'phone')!;
+			expect(field.type).toBe('string');
+			expect(qsKeyFor(field)).toBe('phone');
+		});
+
+		it('high_confidence_only is a boolean routing qs key "high_confidence_only"', () => {
+			const field = getAdditionalField(brandDescription, 'high_confidence_only')!;
+			expect(field.type).toBe('boolean');
+			expect(qsKeyFor(field)).toBe('high_confidence_only');
 		});
 
 		it('ticker_exchange is scoped to retrieveByTicker only', () => {

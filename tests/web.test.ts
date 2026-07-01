@@ -490,4 +490,64 @@ describe('web resource', () => {
 			expect((f!.typeOptions as { maxValue?: number }).maxValue).toBe(500);
 		});
 	});
+
+	// ─── nested + flat param additions (SDK sync) ───────────────────────────────
+	const subNames = (f?: { options?: unknown }) =>
+		((f?.options as { name: string }[] | undefined) ?? []).map((o) => o.name).sort();
+
+	describe('pdf nested collection', () => {
+		it('GET pdf (scrapeMd/scrapeHtml) is a collection routing qs key "pdf"', () => {
+			const f = getAdditionalFieldFor(webDescription, 'pdf', 'scrapeMd')!;
+			expect(f.type).toBe('collection');
+			expect(additionalFieldShowsFor(f)).toEqual(['scrapeMd', 'scrapeHtml']);
+			expect(qsKeyFor(f)).toBe('pdf');
+			expect(subNames(f)).toEqual(['end', 'shouldParse', 'start']);
+		});
+
+		it('crawl pdf routes to body key "pdf"', () => {
+			const f = getAdditionalFieldFor(webDescription, 'pdfPost', 'crawl')!;
+			expect(f.type).toBe('collection');
+			expect(bodyKeyFor(f)).toBe('pdf');
+			expect(subNames(f)).toEqual(['end', 'shouldParse', 'start']);
+		});
+
+		it('extract pdf routes to body key "pdf"', () => {
+			const f = getAdditionalFieldFor(webDescription, 'pdf', 'extract')!;
+			expect(f.type).toBe('collection');
+			expect(bodyKeyFor(f)).toBe('pdf');
+		});
+	});
+
+	describe('enrichment nested collection (scrapeImages)', () => {
+		it('is a collection scoped to scrapeImages routing qs key "enrichment"', () => {
+			const f = getAdditionalField(webDescription, 'enrichment')!;
+			expect(f.type).toBe('collection');
+			expect(additionalFieldShowsFor(f)).toEqual(['scrapeImages']);
+			expect(qsKeyFor(f)).toBe('enrichment');
+			expect(subNames(f)).toEqual(['classification', 'hostedUrl', 'maxTimePerMs', 'resolution']);
+		});
+	});
+
+	describe('shortenBase64Images', () => {
+		it('GET variant (scrapeMd) routes to qs', () => {
+			const f = getAdditionalFieldFor(webDescription, 'shortenBase64Images', 'scrapeMd')!;
+			expect(f.type).toBe('boolean');
+			expect(qsKeyFor(f)).toBe('shortenBase64Images');
+		});
+
+		it('POST variant (crawl) routes to body', () => {
+			const f = getAdditionalFieldFor(webDescription, 'shortenBase64ImagesPost', 'crawl')!;
+			expect(bodyKeyFor(f)).toBe('shortenBase64Images');
+		});
+	});
+
+	describe('viewport nested collection (screenshot)', () => {
+		it('is a collection scoped to screenshot routing qs key "viewport"', () => {
+			const f = getAdditionalField(webDescription, 'viewport')!;
+			expect(f.type).toBe('collection');
+			expect(additionalFieldShowsFor(f)).toEqual(['screenshot']);
+			expect(qsKeyFor(f)).toBe('viewport');
+			expect(subNames(f)).toEqual(['height', 'width']);
+		});
+	});
 });

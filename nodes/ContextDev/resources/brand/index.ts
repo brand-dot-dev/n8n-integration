@@ -209,6 +209,15 @@ export const brandDescription: INodeProperties[] = [
 				routing: { request: { qs: { force_language: '={{ $value }}' } } },
 			},
 			{
+				displayName: 'High Confidence Only',
+				name: 'high_confidence_only',
+				type: 'boolean',
+				displayOptions: { show: { '/operation': ['identifyFromTransaction'] } },
+				default: false,
+				description: 'Whether to only return a brand match when confidence is high',
+				routing: { request: { qs: { high_confidence_only: '={{ $value }}' } } },
+			},
+			{
 				displayName: 'Max Age (Ms)',
 				name: 'maxAgeMs',
 				type: 'number',
@@ -234,6 +243,16 @@ export const brandDescription: INodeProperties[] = [
 				placeholder: '5814',
 				description: 'Merchant Category Code',
 				routing: { request: { qs: { mcc: '={{ $value }}' } } },
+			},
+			{
+				displayName: 'Phone',
+				name: 'phone',
+				type: 'string',
+				displayOptions: { show: { '/operation': ['identifyFromTransaction'] } },
+				default: '',
+				placeholder: '+14155551234',
+				description: 'Company phone number to help identify the brand',
+				routing: { request: { qs: { phone: '={{ $value }}' } } },
 			},
 			{
 				displayName: 'Ticker Exchange',
