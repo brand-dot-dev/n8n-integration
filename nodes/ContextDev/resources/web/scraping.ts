@@ -284,7 +284,7 @@ export const scrapingFields: INodeProperties[] = [
 				name: 'maxAgeMs',
 				type: 'number',
 				displayOptions: {
-					show: { '/operation': ['scrapeMd', 'scrapeHtml', 'scrapeImages', 'scrapeSitemap'] },
+					show: { '/operation': ['scrapeMd', 'scrapeHtml', 'scrapeImages'] },
 				},
 				default: 86400000,
 				description: 'Max age of cached result in ms before a fresh fetch. Default 1 day.',
@@ -440,7 +440,7 @@ export const scrapingFields: INodeProperties[] = [
 				},
 				default: 30000,
 				description: 'Maximum time in milliseconds to wait for a response before the request fails',
-				typeOptions: { minValue: 1, maxValue: 300000 },
+				typeOptions: { minValue: 1000, maxValue: 300000 },
 				routing: { request: { qs: { timeoutMS: '={{ $value }}' } } },
 			},
 			{
@@ -450,7 +450,7 @@ export const scrapingFields: INodeProperties[] = [
 				displayOptions: { show: { '/operation': ['crawl'] } },
 				default: 30000,
 				description: 'Maximum time in milliseconds to wait for a response before the request fails',
-				typeOptions: { minValue: 1, maxValue: 300000 },
+				typeOptions: { minValue: 1000, maxValue: 300000 },
 				routing: { request: { body: { timeoutMS: '={{ $value }}' } } },
 			},
 			{

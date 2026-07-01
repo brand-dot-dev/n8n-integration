@@ -225,7 +225,7 @@ export const searchExtractFields: INodeProperties[] = [
 				default: 30000,
 				description:
 					'Maximum time in milliseconds to wait for each result scrape before it is aborted',
-				typeOptions: { minValue: 1, maxValue: 300000 },
+				typeOptions: { minValue: 1000, maxValue: 300000 },
 				routing: { send: { type: 'body', property: 'markdownOptions.timeoutMS' } },
 			},
 			{
@@ -359,7 +359,7 @@ export const searchExtractFields: INodeProperties[] = [
 				type: 'number',
 				default: 30000,
 				description: 'Maximum time in milliseconds to wait for a response before the request fails',
-				typeOptions: { minValue: 1, maxValue: 300000 },
+				typeOptions: { minValue: 1000, maxValue: 300000 },
 				routing: { request: { body: { timeoutMS: '={{ $value }}' } } },
 			},
 			{

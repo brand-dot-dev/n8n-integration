@@ -175,6 +175,18 @@ export const brandDescription: INodeProperties[] = [
 				displayName: 'Force Language',
 				name: 'force_language',
 				type: 'options',
+				displayOptions: {
+					show: {
+						'/operation': [
+							'identifyFromTransaction',
+							'retrieve',
+							'retrieveByEmail',
+							'retrieveByName',
+							'retrieveByTicker',
+							'retrieveByIsin',
+						],
+					},
+				},
 				default: 'english',
 				options: [
 					{ name: 'Afrikaans', value: 'afrikaans' },
@@ -313,6 +325,18 @@ export const brandDescription: INodeProperties[] = [
 				displayName: 'Max Age (Ms)',
 				name: 'maxAgeMs',
 				type: 'number',
+				displayOptions: {
+					show: {
+						'/operation': [
+							'retrieve',
+							'retrieveByEmail',
+							'retrieveByName',
+							'retrieveByTicker',
+							'retrieveByIsin',
+							'retrieveSimplified',
+						],
+					},
+				},
 				default: 7776000000,
 				description: 'Max age of cached data in ms before a hard refresh. Default 3 months.',
 				typeOptions: { minValue: 86400000, maxValue: 31536000000 },
@@ -322,6 +346,18 @@ export const brandDescription: INodeProperties[] = [
 				displayName: 'Max Speed',
 				name: 'maxSpeed',
 				type: 'boolean',
+				displayOptions: {
+					show: {
+						'/operation': [
+							'identifyFromTransaction',
+							'retrieve',
+							'retrieveByEmail',
+							'retrieveByName',
+							'retrieveByTicker',
+							'retrieveByIsin',
+						],
+					},
+				},
 				default: false,
 				description: 'Whether to skip time-consuming operations for a faster response at the cost of less data',
 				routing: { request: { qs: { maxSpeed: '={{ $value }}' } } },
@@ -436,7 +472,7 @@ export const brandDescription: INodeProperties[] = [
 				name: 'timeoutMS',
 				type: 'number',
 				default: 30000,
-				typeOptions: { minValue: 1, maxValue: 300000 },
+				typeOptions: { minValue: 1000, maxValue: 300000 },
 				routing: { request: { qs: { timeoutMS: '={{ $value }}' } } },
 			},
 		],

@@ -323,13 +323,11 @@ describe('web resource', () => {
 			expect(additionalFieldShowsFor(field)).toEqual(['search']);
 		});
 
-		it('directUrl is scoped to all four visual ops (screenshot, styleguide, fonts, competitors)', () => {
+		it('directUrl is scoped to screenshot, styleguide, fonts (NOT competitors — SDK has no directUrl there)', () => {
 			const field = getAdditionalField(webDescription, 'directUrl')!;
 			const ops = additionalFieldShowsFor(field);
-			expect(ops).toContain('screenshot');
-			expect(ops).toContain('extractStyleguide');
-			expect(ops).toContain('extractFonts');
-			expect(ops).toContain('extractCompetitors');
+			expect(ops.sort()).toEqual(['extractFonts', 'extractStyleguide', 'screenshot']);
+			expect(ops).not.toContain('extractCompetitors');
 		});
 
 		it('visual-op domain is NOT required and omits empty values (enables directUrl-only)', () => {

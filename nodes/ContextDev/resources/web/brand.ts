@@ -56,7 +56,7 @@ export const brandFields: INodeProperties[] = [
 				type: 'string',
 				displayOptions: {
 					show: {
-						'/operation': ['screenshot', 'extractStyleguide', 'extractFonts', 'extractCompetitors'],
+						'/operation': ['screenshot', 'extractStyleguide', 'extractFonts'],
 					},
 				},
 				default: '',
@@ -86,6 +86,7 @@ export const brandFields: INodeProperties[] = [
 				displayName: 'Max Age (Ms)',
 				name: 'maxAgeMs',
 				type: 'number',
+				displayOptions: { show: { '/operation': ['screenshot', 'extractStyleguide', 'extractFonts'] } },
 				default: 86400000,
 				description: 'Max age of cached result in ms before a fresh fetch. Default 1 day.',
 				routing: { request: { qs: { maxAgeMs: '={{ $value }}' } } },
@@ -135,7 +136,7 @@ export const brandFields: INodeProperties[] = [
 				type: 'number',
 				default: 30000,
 				description: 'Maximum time in milliseconds to wait for a response before the request fails',
-				typeOptions: { minValue: 1, maxValue: 300000 },
+				typeOptions: { minValue: 1000, maxValue: 300000 },
 				routing: { request: { qs: { timeoutMS: '={{ $value }}' } } },
 			},
 			{
@@ -153,7 +154,7 @@ export const brandFields: INodeProperties[] = [
 						type: 'number',
 						default: 1920,
 						description: 'Viewport width in pixels',
-						typeOptions: { minValue: 1 },
+						typeOptions: { minValue: 240, maxValue: 7680 },
 					},
 					{
 						displayName: 'Height',
@@ -161,7 +162,7 @@ export const brandFields: INodeProperties[] = [
 						type: 'number',
 						default: 1080,
 						description: 'Viewport height in pixels',
-						typeOptions: { minValue: 1 },
+						typeOptions: { minValue: 240, maxValue: 4320 },
 					},
 				],
 				routing: { request: { qs: { viewport: '={{ $value }}' } } },

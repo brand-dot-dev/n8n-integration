@@ -226,7 +226,7 @@ export const aiDataExtractionDescription: INodeProperties[] = [
 				name: 'timeoutMS',
 				type: 'number',
 				default: 30000,
-				typeOptions: { minValue: 1, maxValue: 300000 },
+				typeOptions: { minValue: 1000, maxValue: 300000 },
 				routing: { request: { body: { timeoutMS: '={{ $value }}' } } },
 			},
 		],
