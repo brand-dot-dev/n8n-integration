@@ -264,10 +264,18 @@ describe('monitors resource', () => {
 			['updName', 'name'],
 			['updWebhookUrl', 'webhook.url'],
 			['updQuery', 'change_detection.query'],
+			['updExtractInstructions', 'target.instructions'],
+			['updExtractSchema', 'target.schema'],
 		])('update field %s sends body path %s', (name, prop) => {
 			const f = anyField(name)!;
 			expect(f).toBeDefined();
 			expect(sendOf(f)!.property).toBe(prop);
+		});
+
+		it('update extract schema is JSON and parses before sending', () => {
+			const f = anyField('updExtractSchema')!;
+			expect(f.type).toBe('json');
+			expect(sendOf(f)!.value).toContain('JSON.parse');
 		});
 
 		it('update schedule is a fixedCollection that always injects the required schedule.type', () => {

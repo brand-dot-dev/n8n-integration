@@ -422,6 +422,14 @@ const updateFields: INodeProperties[] = [
 				routing: { send: { type: 'body', property: 'target.instructions' } },
 			},
 			{
+				displayName: 'Extract Schema (JSON)',
+				name: 'updExtractSchema',
+				type: 'json',
+				default: '',
+				description: 'JSON Schema describing the structured data to extract and watch for changes',
+				routing: { send: { type: 'body', property: 'target.schema', value: '={{ JSON.parse($value) }}' } },
+			},
+			{
 				displayName: 'Extract Max Depth',
 				name: 'updExtractMaxDepth',
 				type: 'number',
