@@ -5,14 +5,16 @@ const visualOps = ['screenshot', 'extractStyleguide', 'extractFonts', 'extractCo
 
 export const brandFields: INodeProperties[] = [
 	{
+		// The SDK accepts EITHER domain OR directUrl (not both), so domain is not required —
+		// an empty value is omitted so a directUrl-only request is possible.
 		displayName: 'Domain',
 		name: 'domain',
 		type: 'string',
-		required: true,
 		displayOptions: { show: { ...show, operation: visualOps } },
 		default: '',
 		placeholder: 'stripe.com',
-		routing: { request: { qs: { domain: '={{ $value }}' } } },
+		description: 'Company domain. Provide either Domain or Direct URL (in Additional Fields), not both.',
+		routing: { request: { qs: { domain: '={{ $value || undefined }}' } } },
 	},
 
 	{
@@ -24,14 +26,43 @@ export const brandFields: INodeProperties[] = [
 		displayOptions: { show: { ...show, operation: visualOps } },
 		options: [
 			{
+				displayName: 'Color Scheme',
+				name: 'colorScheme',
+				type: 'options',
+				displayOptions: { show: { '/operation': ['screenshot', 'extractStyleguide'] } },
+				default: '',
+				options: [
+					{ name: 'Auto (Default)', value: '' },
+					{ name: 'Light', value: 'light' },
+					{ name: 'Dark', value: 'dark' },
+				],
+				description: 'Preferred color scheme to request from the target page',
+				routing: { request: { qs: { colorScheme: '={{ $value }}' } } },
+			},
+			{
+				displayName: 'Country',
+				name: 'country',
+				type: 'string',
+				displayOptions: { show: { '/operation': ['screenshot'] } },
+				default: '',
+				placeholder: 'us',
+				description:
+					'Two-letter ISO 3166-1 alpha-2 country code to fetch the page from that location',
+				routing: { request: { qs: { country: '={{ $value }}' } } },
+			},
+			{
 				displayName: 'Direct URL',
 				name: 'directUrl',
 				type: 'string',
-				displayOptions: { show: { '/operation': ['screenshot', 'extractStyleguide', 'extractFonts'] } },
+				displayOptions: {
+					show: {
+						'/operation': ['screenshot', 'extractStyleguide', 'extractFonts'],
+					},
+				},
 				default: '',
 				placeholder: 'https://example.com/design-system',
-				description: 'Fetch from this exact URL instead of resolving from the domain',
-				routing: { request: { qs: { directUrl: '={{ $value }}' } } },
+				description: 'Fetch from this exact URL instead of resolving from the domain. Alternative to Domain (not both).',
+				routing: { request: { qs: { directUrl: '={{ $value || undefined }}' } } },
 			},
 			{
 				displayName: 'Full Page Screenshot',
@@ -39,7 +70,7 @@ export const brandFields: INodeProperties[] = [
 				type: 'boolean',
 				displayOptions: { show: { '/operation': ['screenshot'] } },
 				default: false,
-				description: 'Capture the full scrollable page height instead of just the visible viewport',
+				description: 'Whether to capture the full scrollable page height instead of just the visible viewport',
 				routing: { request: { qs: { fullScreenshot: '={{ $value ? "true" : "false" }}' } } },
 			},
 			{
@@ -48,13 +79,14 @@ export const brandFields: INodeProperties[] = [
 				type: 'boolean',
 				displayOptions: { show: { '/operation': ['screenshot'] } },
 				default: false,
-				description: 'Attempt to dismiss cookie consent banners before taking the screenshot',
+				description: 'Whether to attempt to dismiss cookie consent banners before taking the screenshot',
 				routing: { request: { qs: { handleCookiePopup: '={{ $value ? "true" : "false" }}' } } },
 			},
 			{
 				displayName: 'Max Age (Ms)',
 				name: 'maxAgeMs',
 				type: 'number',
+				displayOptions: { show: { '/operation': ['screenshot', 'extractStyleguide', 'extractFonts'] } },
 				default: 86400000,
 				description: 'Max age of cached result in ms before a fresh fetch. Default 1 day.',
 				routing: { request: { qs: { maxAgeMs: '={{ $value }}' } } },
@@ -88,13 +120,52 @@ export const brandFields: INodeProperties[] = [
 				routing: { request: { qs: { page: '={{ $value }}' } } },
 			},
 			{
+				displayName: 'Scroll Offset',
+				name: 'scrollOffset',
+				type: 'number',
+				displayOptions: { show: { '/operation': ['screenshot'] } },
+				default: 0,
+				description:
+					'Vertical scroll offset in pixels to capture a long page in viewport-sized slices. Takes precedence over Full Page Screenshot. Max 100,000.',
+				typeOptions: { minValue: 0, maxValue: 100000 },
+				routing: { request: { qs: { scrollOffset: '={{ $value }}' } } },
+			},
+			{
 				displayName: 'Timeout (Ms)',
 				name: 'timeoutMS',
 				type: 'number',
 				default: 30000,
-				description: 'Maximum time in milliseconds to wait for a response before the request fails.',
-				typeOptions: { minValue: 1, maxValue: 300000 },
+				description: 'Maximum time in milliseconds to wait for a response before the request fails',
+				typeOptions: { minValue: 1000, maxValue: 300000 },
 				routing: { request: { qs: { timeoutMS: '={{ $value }}' } } },
+			},
+			{
+				displayName: 'Viewport',
+				name: 'viewport',
+				type: 'collection',
+				placeholder: 'Add Dimension',
+				default: {},
+				displayOptions: { show: { '/operation': ['screenshot'] } },
+				description: 'Browser viewport dimensions for the screenshot. Defaults to 1920x1080.',
+				options: [
+					{
+						displayName: 'Width',
+						name: 'width',
+						type: 'number',
+						default: 1920,
+						description: 'Viewport width in pixels',
+						typeOptions: { minValue: 240, maxValue: 7680 },
+					},
+					{
+						displayName: 'Height',
+						name: 'height',
+						type: 'number',
+						default: 1080,
+						description: 'Viewport height in pixels',
+						typeOptions: { minValue: 240, maxValue: 4320 },
+					},
+				],
+				routing: { request: { qs: { viewport: '={{ $value }}' } } },
 			},
 			{
 				displayName: 'Wait For (Ms)',

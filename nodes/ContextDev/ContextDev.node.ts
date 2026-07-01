@@ -5,6 +5,7 @@ import { webDescription } from './resources/web';
 import { aiDataExtractionDescription } from './resources/aiDataExtraction';
 import { industryDescription } from './resources/industry';
 import { utilityDescription } from './resources/utility';
+import { monitorsDescription } from './resources/monitors';
 
 export class ContextDev implements INodeType {
 	description: INodeTypeDescription = {
@@ -40,6 +41,7 @@ export class ContextDev implements INodeType {
 					{ name: 'AI Data Extraction', value: 'aiDataExtraction' },
 					{ name: 'Brand Intelligence', value: 'brand' },
 					{ name: 'Industry Classification', value: 'industry' },
+					{ name: 'Monitor', value: 'monitors' },
 					{ name: 'Utility', value: 'utility' },
 					{ name: 'Web Scraping', value: 'web' },
 				],
@@ -50,6 +52,7 @@ export class ContextDev implements INodeType {
 			...aiDataExtractionDescription,
 			...industryDescription,
 			...utilityDescription,
+			...monitorsDescription,
 		],
 	};
 }

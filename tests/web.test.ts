@@ -16,6 +16,8 @@ import {
 	bodyKeyFor,
 	arrayFormatFor,
 	getAdditionalFieldFor,
+	sendPropertyFor,
+	sendTypeFor,
 } from './helpers';
 
 describe('web resource', () => {
@@ -321,12 +323,19 @@ describe('web resource', () => {
 			expect(additionalFieldShowsFor(field)).toEqual(['search']);
 		});
 
-		it('directUrl is scoped to screenshot, extractStyleguide, extractFonts', () => {
+		it('directUrl is scoped to screenshot, styleguide, fonts (NOT competitors — SDK has no directUrl there)', () => {
 			const field = getAdditionalField(webDescription, 'directUrl')!;
 			const ops = additionalFieldShowsFor(field);
-			expect(ops).toContain('screenshot');
-			expect(ops).toContain('extractStyleguide');
-			expect(ops).toContain('extractFonts');
+			expect(ops.sort()).toEqual(['extractFonts', 'extractStyleguide', 'screenshot']);
+			expect(ops).not.toContain('extractCompetitors');
+		});
+
+		it('visual-op domain is NOT required and omits empty values (enables directUrl-only)', () => {
+			const domain = getAllTopFields(webDescription, 'domain').find((f) =>
+				showsForOperations(f).includes('screenshot'),
+			)!;
+			expect(domain.required).not.toBe(true);
+			expect((domain.routing?.request?.qs as Record<string, string>).domain).toContain('|| undefined');
 		});
 	});
 
@@ -488,6 +497,225 @@ describe('web resource', () => {
 		it('crawl maxPages keeps its own 500 cap (distinct bound)', () => {
 			const f = getAdditionalFieldFor(webDescription, 'maxPages', 'crawl');
 			expect((f!.typeOptions as { maxValue?: number }).maxValue).toBe(500);
+		});
+	});
+
+	// ─── nested + flat param additions (SDK sync) ───────────────────────────────
+	const subNames = (f?: { options?: unknown }) =>
+		((f?.options as { name: string }[] | undefined) ?? []).map((o) => o.name).sort();
+
+	describe('pdf nested collection', () => {
+		it('GET pdf (scrapeMd/scrapeHtml) is a collection routing qs key "pdf"', () => {
+			const f = getAdditionalFieldFor(webDescription, 'pdf', 'scrapeMd')!;
+			expect(f.type).toBe('collection');
+			expect(additionalFieldShowsFor(f)).toEqual(['scrapeMd', 'scrapeHtml']);
+			expect(qsKeyFor(f)).toBe('pdf');
+			expect(subNames(f)).toEqual(['end', 'shouldParse', 'start']);
+		});
+
+		it('crawl pdf routes to body key "pdf", scoped to crawl only', () => {
+			const f = getAdditionalFieldFor(webDescription, 'pdfPost', 'crawl')!;
+			expect(f.type).toBe('collection');
+			expect(bodyKeyFor(f)).toBe('pdf');
+			expect(additionalFieldShowsFor(f)).toEqual(['crawl']);
+			expect(subNames(f)).toEqual(['end', 'shouldParse', 'start']);
+		});
+
+		it('extract pdf routes to body key "pdf", scoped to extract, with all sub-fields', () => {
+			const f = getAdditionalFieldFor(webDescription, 'pdf', 'extract')!;
+			expect(f.type).toBe('collection');
+			expect(bodyKeyFor(f)).toBe('pdf');
+			expect(additionalFieldShowsFor(f)).toEqual(['extract']);
+			expect(subNames(f)).toEqual(['end', 'shouldParse', 'start']);
+		});
+	});
+
+	describe('enrichment nested collection (scrapeImages)', () => {
+		it('is a collection scoped to scrapeImages routing qs key "enrichment"', () => {
+			const f = getAdditionalField(webDescription, 'enrichment')!;
+			expect(f.type).toBe('collection');
+			expect(additionalFieldShowsFor(f)).toEqual(['scrapeImages']);
+			expect(qsKeyFor(f)).toBe('enrichment');
+			expect(subNames(f)).toEqual(['classification', 'hostedUrl', 'maxTimePerMs', 'resolution']);
+		});
+	});
+
+	describe('shortenBase64Images', () => {
+		it('GET variant (scrapeMd) routes to qs, scoped to scrapeMd only', () => {
+			const f = getAdditionalFieldFor(webDescription, 'shortenBase64Images', 'scrapeMd')!;
+			expect(f.type).toBe('boolean');
+			expect(qsKeyFor(f)).toBe('shortenBase64Images');
+			expect(additionalFieldShowsFor(f)).toEqual(['scrapeMd']);
+		});
+
+		it('POST variant (crawl) routes to body, scoped to crawl only', () => {
+			const f = getAdditionalFieldFor(webDescription, 'shortenBase64ImagesPost', 'crawl')!;
+			expect(bodyKeyFor(f)).toBe('shortenBase64Images');
+			expect(additionalFieldShowsFor(f)).toEqual(['crawl']);
+		});
+	});
+
+	describe('viewport nested collection (screenshot)', () => {
+		it('is a collection scoped to screenshot routing qs key "viewport"', () => {
+			const f = getAdditionalField(webDescription, 'viewport')!;
+			expect(f.type).toBe('collection');
+			expect(additionalFieldShowsFor(f)).toEqual(['screenshot']);
+			expect(qsKeyFor(f)).toBe('viewport');
+			expect(subNames(f)).toEqual(['height', 'width']);
+		});
+	});
+
+	// ─── SDK 1.41 web params (colorScheme, country, numResults, scrollOffset) ────
+	describe('colorScheme (SDK 1.41)', () => {
+		it('is an options field offering light + dark', () => {
+			const f = getAdditionalField(webDescription, 'colorScheme')!;
+			expect(f).toBeDefined();
+			expect(f.type).toBe('options');
+			const values = (f.options as { value: string }[]).map((o) => o.value);
+			expect(values).toContain('light');
+			expect(values).toContain('dark');
+		});
+
+		it('is scoped to screenshot + extractStyleguide and routes to qs key "colorScheme"', () => {
+			const f = getAdditionalField(webDescription, 'colorScheme')!;
+			expect(additionalFieldShowsFor(f).sort()).toEqual(['extractStyleguide', 'screenshot']);
+			expect(qsKeyFor(f)).toBe('colorScheme');
+		});
+
+		it('defaults to "" (Auto)', () => {
+			expect(getAdditionalField(webDescription, 'colorScheme')!.default).toBe('');
+		});
+	});
+
+	describe('scrollOffset (SDK 1.41)', () => {
+		it('is a number scoped to screenshot, routing qs key "scrollOffset"', () => {
+			const f = getAdditionalField(webDescription, 'scrollOffset')!;
+			expect(f).toBeDefined();
+			expect(f.type).toBe('number');
+			expect(additionalFieldShowsFor(f)).toEqual(['screenshot']);
+			expect(qsKeyFor(f)).toBe('scrollOffset');
+		});
+
+		it('bounds match SDK (0..100000, default 0)', () => {
+			const f = getAdditionalField(webDescription, 'scrollOffset')!;
+			expect(f.default).toBe(0);
+			expect((f.typeOptions as { minValue?: number; maxValue?: number }).minValue).toBe(0);
+			expect((f.typeOptions as { minValue?: number; maxValue?: number }).maxValue).toBe(100000);
+		});
+	});
+
+	describe('numResults (SDK 1.41)', () => {
+		it('is a number scoped to search, routing body key "numResults"', () => {
+			const f = getAdditionalField(webDescription, 'numResults')!;
+			expect(f).toBeDefined();
+			expect(f.type).toBe('number');
+			expect(additionalFieldShowsFor(f)).toEqual(['search']);
+			expect(bodyKeyFor(f)).toBe('numResults');
+		});
+
+		it('bounds match SDK (10..100, default 10)', () => {
+			const f = getAdditionalField(webDescription, 'numResults')!;
+			expect(f.default).toBe(10);
+			expect((f.typeOptions as { minValue?: number; maxValue?: number }).minValue).toBe(10);
+			expect((f.typeOptions as { minValue?: number; maxValue?: number }).maxValue).toBe(100);
+		});
+	});
+
+	describe('country (SDK 1.41)', () => {
+		// exact op×routing matrix from the SDK: qs for GET ops, body for POST ops.
+		// The two GET scrape ops share one qs field; screenshot/crawl/search each get their own.
+		const cases: [op: string, fieldName: string, loc: 'qs' | 'body', show: string[]][] = [
+			['scrapeMd', 'country', 'qs', ['scrapeMd', 'scrapeHtml']],
+			['scrapeHtml', 'country', 'qs', ['scrapeMd', 'scrapeHtml']],
+			['screenshot', 'country', 'qs', ['screenshot']],
+			['crawl', 'countryPost', 'body', ['crawl']],
+			['search', 'country', 'body', ['search']],
+		];
+
+		it.each(cases)('%s: string field routes country via %s with exact scoping', (op, name, loc, show) => {
+			const f = getAdditionalFieldFor(webDescription, name, op)!;
+			expect(f).toBeDefined();
+			expect(f.type).toBe('string');
+			expect(f.default).toBe('');
+			expect(additionalFieldShowsFor(f).sort()).toEqual([...show].sort());
+			if (loc === 'qs') expect(qsKeyFor(f)).toBe('country');
+			else expect(bodyKeyFor(f)).toBe('country');
+		});
+
+		it('country is NOT offered for extractStyleguide (SDK has no country there)', () => {
+			expect(getAdditionalFieldFor(webDescription, 'country', 'extractStyleguide')).toBeUndefined();
+			expect(getAdditionalFieldFor(webDescription, 'countryPost', 'extractStyleguide')).toBeUndefined();
+		});
+	});
+
+	// ─── search markdownOptions sub-fields (capability drop fix) ────────────────
+	// markdownEnabled only ever sent markdownOptions.enabled — once a user turned
+	// scraping on for search results, there was no way to configure it. These
+	// fields expose the rest of WebSearchParams.MarkdownOptions from the SDK.
+
+	describe('search markdownOptions sub-fields', () => {
+		const booleanCases: [name: string, apiPath: string][] = [
+			['markdownIncludeFrames', 'markdownOptions.includeFrames'],
+			['markdownIncludeImages', 'markdownOptions.includeImages'],
+			['markdownIncludeLinks', 'markdownOptions.includeLinks'],
+			['markdownUseMainContentOnly', 'markdownOptions.useMainContentOnly'],
+			['markdownShortenBase64Images', 'markdownOptions.shortenBase64Images'],
+		];
+
+		it.each(booleanCases)('%s is a boolean scoped to search, sending body via "%s"', (name, apiPath) => {
+			const f = getAdditionalField(webDescription, name);
+			expect(f).toBeDefined();
+			expect(f!.type).toBe('boolean');
+			expect(additionalFieldShowsFor(f!)).toEqual(['search']);
+			expect(sendTypeFor(f!)).toBe('body');
+			expect(sendPropertyFor(f!)).toBe(apiPath);
+		});
+
+		const numberCases: [name: string, apiPath: string][] = [
+			['markdownMaxAgeMs', 'markdownOptions.maxAgeMs'],
+			['markdownTimeoutMS', 'markdownOptions.timeoutMS'],
+			['markdownWaitForMs', 'markdownOptions.waitForMs'],
+		];
+
+		it.each(numberCases)('%s is a number scoped to search, sending body via "%s"', (name, apiPath) => {
+			const f = getAdditionalField(webDescription, name);
+			expect(f).toBeDefined();
+			expect(f!.type).toBe('number');
+			expect(additionalFieldShowsFor(f!)).toEqual(['search']);
+			expect(sendTypeFor(f!)).toBe('body');
+			expect(sendPropertyFor(f!)).toBe(apiPath);
+		});
+
+		it('all markdownOptions sub-fields only display when markdownEnabled is true', () => {
+			const names = [...booleanCases, ...numberCases].map(([name]) => name);
+			for (const name of names) {
+				const f = getAdditionalField(webDescription, name)!;
+				const show = f.displayOptions?.show as Record<string, unknown> | undefined;
+				expect(show?.['/markdownEnabled']).toEqual([true]);
+			}
+		});
+
+		describe('markdownPdf nested collection', () => {
+			it('is a collection scoped to search, sending body via "markdownOptions.pdf"', () => {
+				const f = getAdditionalField(webDescription, 'markdownPdf');
+				expect(f).toBeDefined();
+				expect(f!.type).toBe('collection');
+				expect(additionalFieldShowsFor(f!)).toEqual(['search']);
+				expect(sendTypeFor(f!)).toBe('body');
+				expect(sendPropertyFor(f!)).toBe('markdownOptions.pdf');
+			});
+
+			it('exposes start, end, shouldParse sub-fields (matches SDK MarkdownOptions.Pdf)', () => {
+				const f = getAdditionalField(webDescription, 'markdownPdf')!;
+				const names = (f.options as { name: string }[]).map((o) => o.name).sort();
+				expect(names).toEqual(['end', 'shouldParse', 'start']);
+			});
+
+			it('only displays when markdownEnabled is true', () => {
+				const f = getAdditionalField(webDescription, 'markdownPdf')!;
+				const show = f.displayOptions?.show as Record<string, unknown> | undefined;
+				expect(show?.['/markdownEnabled']).toEqual([true]);
+			});
 		});
 	});
 });

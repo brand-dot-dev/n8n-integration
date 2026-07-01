@@ -128,6 +128,16 @@ export function arrayFormatFor(field: INodeProperties): string | undefined {
 	return (field.routing?.request as { arrayFormat?: string } | undefined)?.arrayFormat;
 }
 
+/** Get the routing.send.property path a field routes to (e.g. 'markdownOptions.enabled') */
+export function sendPropertyFor(field: INodeProperties): string | undefined {
+	return (field.routing?.send as { property?: string } | undefined)?.property;
+}
+
+/** Get the routing.send.type a field uses (e.g. 'body') */
+export function sendTypeFor(field: INodeProperties): string | undefined {
+	return (field.routing?.send as { type?: string } | undefined)?.type;
+}
+
 /** Every INodeProperties in a description, including nested options */
 export function allFields(desc: INodeProperties[]): INodeProperties[] {
 	const result: INodeProperties[] = [];

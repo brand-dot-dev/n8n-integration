@@ -44,12 +44,136 @@ export const scrapingFields: INodeProperties[] = [
 		displayOptions: { show: { ...show, operation: scrapingOps } },
 		options: [
 			{
+				displayName: 'Country',
+				name: 'country',
+				type: 'string',
+				displayOptions: { show: { '/operation': ['scrapeMd', 'scrapeHtml'] } },
+				default: '',
+				placeholder: 'us',
+				description:
+					'Two-letter ISO 3166-1 alpha-2 country code to fetch the page from that location',
+				routing: { request: { qs: { country: '={{ $value }}' } } },
+			},
+			{
+				displayName: 'Country',
+				name: 'countryPost',
+				type: 'string',
+				displayOptions: { show: { '/operation': ['crawl'] } },
+				default: '',
+				placeholder: 'us',
+				description:
+					'Two-letter ISO 3166-1 alpha-2 country code to fetch pages from that location',
+				routing: { request: { body: { country: '={{ $value }}' } } },
+			},
+			{
+				displayName: 'Custom Headers',
+				name: 'headers',
+				type: 'fixedCollection',
+				typeOptions: { multipleValues: true },
+				default: {},
+				displayOptions: {
+					show: { '/operation': ['scrapeMd', 'scrapeHtml', 'scrapeImages', 'scrapeSitemap'] },
+				},
+				description:
+					'Custom HTTP headers forwarded to the target URL. Sending headers bypasses the cache.',
+				options: [
+					{
+						name: 'header',
+						displayName: 'Header',
+						values: [
+							{ displayName: 'Name', name: 'name', type: 'string', default: '' },
+							{ displayName: 'Value', name: 'value', type: 'string', default: '' },
+						],
+					},
+				],
+				routing: {
+					request: {
+						qs: {
+							headers:
+								'={{ Object.fromEntries(($value.header || []).map(h => [h.name, h.value])) }}',
+						},
+					},
+				},
+			},
+			{
+				displayName: 'Enrichment',
+				name: 'enrichment',
+				type: 'collection',
+				placeholder: 'Add Enrichment Option',
+				default: {},
+				displayOptions: { show: { '/operation': ['scrapeImages'] } },
+				description:
+					'Enrich each returned image. Enabling enrichment raises the call cost to 5 credits.',
+				options: [
+					{
+						displayName: 'Classification',
+						name: 'classification',
+						type: 'boolean',
+						default: false,
+						description: 'Whether to classify each image by visual asset type',
+					},
+					{
+						displayName: 'Hosted URL',
+						name: 'hostedUrl',
+						type: 'boolean',
+						default: false,
+						description:
+							'Whether to host materializable images on the CDN and return their URL and MIME type',
+					},
+					{
+						displayName: 'Max Time per Image (Ms)',
+						name: 'maxTimePerMs',
+						type: 'number',
+						default: 30000,
+						description: 'Per-image enrichment timeout in milliseconds. Default 30,000. Max 60,000.',
+						typeOptions: { minValue: 1, maxValue: 60000 },
+					},
+					{
+						displayName: 'Resolution',
+						name: 'resolution',
+						type: 'boolean',
+						default: false,
+						description: 'Whether to measure image width and height when possible',
+					},
+				],
+				routing: { request: { qs: { enrichment: '={{ $value }}' } } },
+			},
+			{
+				displayName: 'Exclude Selectors',
+				name: 'excludeSelectors',
+				type: 'string',
+				displayOptions: { show: { '/operation': ['scrapeMd', 'scrapeHtml'] } },
+				default: '',
+				description: 'Comma-separated CSS selectors to remove before extraction (e.g. "nav, footer, .ad-banner")',
+				routing: {
+					request: {
+						qs: { excludeSelectors: '={{ $value.split(",").map(s => s.trim()).filter(Boolean) }}' },
+						arrayFormat: 'comma',
+					},
+				},
+			},
+			{
+				displayName: 'Exclude Selectors',
+				name: 'excludeSelectorsPost',
+				type: 'string',
+				displayOptions: { show: { '/operation': ['crawl'] } },
+				default: '',
+				description: 'Comma-separated CSS selectors to remove before extraction (e.g. "nav, footer, .ad-banner")',
+				routing: {
+					request: {
+						body: {
+							excludeSelectors: '={{ $value.split(",").map(s => s.trim()).filter(Boolean) }}',
+						},
+					},
+				},
+			},
+			{
 				displayName: 'Follow Subdomains',
 				name: 'followSubdomains',
 				type: 'boolean',
 				displayOptions: { show: { '/operation': ['crawl'] } },
 				default: false,
-				description: 'Follow links to subdomains (e.g. blog.example.com) during a crawl',
+				description: 'Whether to follow links to subdomains (e.g. blog.example.com) during a crawl',
 				routing: { request: { body: { followSubdomains: '={{ $value }}' } } },
 			},
 			{
@@ -58,7 +182,7 @@ export const scrapingFields: INodeProperties[] = [
 				type: 'boolean',
 				displayOptions: { show: { '/operation': ['scrapeMd', 'scrapeHtml'] } },
 				default: false,
-				description: 'Include content from iframes embedded in the page',
+				description: 'Whether to include content from iframes embedded in the page',
 				routing: { request: { qs: { includeFrames: '={{ $value }}' } } },
 			},
 			{
@@ -67,7 +191,7 @@ export const scrapingFields: INodeProperties[] = [
 				type: 'boolean',
 				displayOptions: { show: { '/operation': ['crawl'] } },
 				default: false,
-				description: 'Include content from iframes embedded in the page',
+				description: 'Whether to include content from iframes embedded in the page',
 				routing: { request: { body: { includeFrames: '={{ $value }}' } } },
 			},
 			{
@@ -76,7 +200,7 @@ export const scrapingFields: INodeProperties[] = [
 				type: 'boolean',
 				displayOptions: { show: { '/operation': ['scrapeMd'] } },
 				default: false,
-				description: 'Include image references in the returned Markdown output',
+				description: 'Whether to include image references in the returned Markdown output',
 				routing: { request: { qs: { includeImages: '={{ $value }}' } } },
 			},
 			{
@@ -85,7 +209,7 @@ export const scrapingFields: INodeProperties[] = [
 				type: 'boolean',
 				displayOptions: { show: { '/operation': ['crawl'] } },
 				default: false,
-				description: 'Include image references in the returned Markdown output',
+				description: 'Whether to include image references in the returned Markdown output',
 				routing: { request: { body: { includeImages: '={{ $value }}' } } },
 			},
 			{
@@ -94,7 +218,7 @@ export const scrapingFields: INodeProperties[] = [
 				type: 'boolean',
 				displayOptions: { show: { '/operation': ['scrapeMd'] } },
 				default: true,
-				description: 'Preserve hyperlinks in the returned Markdown output',
+				description: 'Whether to preserve hyperlinks in the returned Markdown output',
 				routing: { request: { qs: { includeLinks: '={{ $value }}' } } },
 			},
 			{
@@ -103,26 +227,8 @@ export const scrapingFields: INodeProperties[] = [
 				type: 'boolean',
 				displayOptions: { show: { '/operation': ['crawl'] } },
 				default: true,
-				description: 'Preserve hyperlinks in the returned Markdown output',
+				description: 'Whether to preserve hyperlinks in the returned Markdown output',
 				routing: { request: { body: { includeLinks: '={{ $value }}' } } },
-			},
-			{
-				displayName: 'Main Content Only',
-				name: 'useMainContentOnly',
-				type: 'boolean',
-				displayOptions: { show: { '/operation': ['scrapeMd', 'scrapeHtml'] } },
-				default: false,
-				description: 'Strip navigation, headers, and footers — return only the main body content',
-				routing: { request: { qs: { useMainContentOnly: '={{ $value }}' } } },
-			},
-			{
-				displayName: 'Main Content Only',
-				name: 'useMainContentOnlyPost',
-				type: 'boolean',
-				displayOptions: { show: { '/operation': ['crawl'] } },
-				default: false,
-				description: 'Strip navigation, headers, and footers — return only the main body content',
-				routing: { request: { body: { useMainContentOnly: '={{ $value }}' } } },
 			},
 			{
 				displayName: 'Include Selectors',
@@ -156,72 +262,29 @@ export const scrapingFields: INodeProperties[] = [
 				},
 			},
 			{
-				displayName: 'Exclude Selectors',
-				name: 'excludeSelectors',
-				type: 'string',
+				displayName: 'Main Content Only',
+				name: 'useMainContentOnly',
+				type: 'boolean',
 				displayOptions: { show: { '/operation': ['scrapeMd', 'scrapeHtml'] } },
-				default: '',
-				description:
-					'Comma-separated CSS selectors to remove before extraction (e.g. "nav, footer, .ad-banner").',
-				routing: {
-					request: {
-						qs: { excludeSelectors: '={{ $value.split(",").map(s => s.trim()).filter(Boolean) }}' },
-						arrayFormat: 'comma',
-					},
-				},
+				default: false,
+				description: 'Whether to strip navigation, headers, and footers — return only the main body content',
+				routing: { request: { qs: { useMainContentOnly: '={{ $value }}' } } },
 			},
 			{
-				displayName: 'Exclude Selectors',
-				name: 'excludeSelectorsPost',
-				type: 'string',
+				displayName: 'Main Content Only',
+				name: 'useMainContentOnlyPost',
+				type: 'boolean',
 				displayOptions: { show: { '/operation': ['crawl'] } },
-				default: '',
-				description:
-					'Comma-separated CSS selectors to remove before extraction (e.g. "nav, footer, .ad-banner").',
-				routing: {
-					request: {
-						body: {
-							excludeSelectors: '={{ $value.split(",").map(s => s.trim()).filter(Boolean) }}',
-						},
-					},
-				},
-			},
-			{
-				displayName: 'Custom Headers',
-				name: 'headers',
-				type: 'fixedCollection',
-				typeOptions: { multipleValues: true },
-				default: {},
-				displayOptions: {
-					show: { '/operation': ['scrapeMd', 'scrapeHtml', 'scrapeImages', 'scrapeSitemap'] },
-				},
-				description:
-					'Custom HTTP headers forwarded to the target URL. Sending headers bypasses the cache.',
-				options: [
-					{
-						name: 'header',
-						displayName: 'Header',
-						values: [
-							{ displayName: 'Name', name: 'name', type: 'string', default: '' },
-							{ displayName: 'Value', name: 'value', type: 'string', default: '' },
-						],
-					},
-				],
-				routing: {
-					request: {
-						qs: {
-							headers:
-								'={{ Object.fromEntries(($value.header || []).map(h => [h.name, h.value])) }}',
-						},
-					},
-				},
+				default: false,
+				description: 'Whether to strip navigation, headers, and footers — return only the main body content',
+				routing: { request: { body: { useMainContentOnly: '={{ $value }}' } } },
 			},
 			{
 				displayName: 'Max Age (Ms)',
 				name: 'maxAgeMs',
 				type: 'number',
 				displayOptions: {
-					show: { '/operation': ['scrapeMd', 'scrapeHtml', 'scrapeImages', 'scrapeSitemap'] },
+					show: { '/operation': ['scrapeMd', 'scrapeHtml', 'scrapeImages'] },
 				},
 				default: 86400000,
 				description: 'Max age of cached result in ms before a fresh fetch. Default 1 day.',
@@ -268,6 +331,96 @@ export const scrapingFields: INodeProperties[] = [
 				routing: { request: { body: { maxPages: '={{ $value }}' } } },
 			},
 			{
+				displayName: 'PDF Parsing',
+				name: 'pdf',
+				type: 'collection',
+				placeholder: 'Add PDF Option',
+				default: {},
+				displayOptions: { show: { '/operation': ['scrapeMd', 'scrapeHtml'] } },
+				description: 'Control how linked PDF documents are fetched and parsed',
+				options: [
+					{
+						displayName: 'End Page',
+						name: 'end',
+						type: 'number',
+						default: 1,
+						description: 'Last 1-based PDF page to parse. Must be greater than or equal to Start Page.',
+						typeOptions: { minValue: 1 },
+					},
+					{
+						displayName: 'Should Parse',
+						name: 'shouldParse',
+						type: 'boolean',
+						default: true,
+						description:
+							'Whether PDF pages are fetched and parsed. When false, PDF pages are skipped.',
+					},
+					{
+						displayName: 'Start Page',
+						name: 'start',
+						type: 'number',
+						default: 1,
+						description: 'First 1-based PDF page to parse',
+						typeOptions: { minValue: 1 },
+					},
+				],
+				routing: { request: { qs: { pdf: '={{ $value }}' } } },
+			},
+			{
+				displayName: 'PDF Parsing',
+				name: 'pdfPost',
+				type: 'collection',
+				placeholder: 'Add PDF Option',
+				default: {},
+				displayOptions: { show: { '/operation': ['crawl'] } },
+				description: 'Control how linked PDF documents are fetched and parsed',
+				options: [
+					{
+						displayName: 'End Page',
+						name: 'end',
+						type: 'number',
+						default: 1,
+						description: 'Last 1-based PDF page to parse. Must be greater than or equal to Start Page.',
+						typeOptions: { minValue: 1 },
+					},
+					{
+						displayName: 'Should Parse',
+						name: 'shouldParse',
+						type: 'boolean',
+						default: true,
+						description:
+							'Whether PDF pages are fetched and parsed. When false, PDF pages are skipped.',
+					},
+					{
+						displayName: 'Start Page',
+						name: 'start',
+						type: 'number',
+						default: 1,
+						description: 'First 1-based PDF page to parse',
+						typeOptions: { minValue: 1 },
+					},
+				],
+				routing: { request: { body: { pdf: '={{ $value }}' } } },
+			},
+			{
+				displayName: 'Shorten Base64 Images',
+				name: 'shortenBase64Images',
+				type: 'boolean',
+				displayOptions: { show: { '/operation': ['scrapeMd'] } },
+				default: false,
+				description: 'Whether to truncate inline base64 image payloads to keep responses small',
+				routing: { request: { qs: { shortenBase64Images: '={{ $value }}' } } },
+			},
+			{
+				displayName: 'Shorten Base64 Images',
+				name: 'shortenBase64ImagesPost',
+				type: 'boolean',
+				displayOptions: { show: { '/operation': ['crawl'] } },
+				default: false,
+				description: 'Whether to truncate inline base64 image payloads to keep responses small',
+				routing: { request: { body: { shortenBase64Images: '={{ $value }}' } } },
+			},
+			{
 				displayName: 'Stop After (Ms)',
 				name: 'stopAfterMs',
 				type: 'number',
@@ -286,9 +439,8 @@ export const scrapingFields: INodeProperties[] = [
 					show: { '/operation': ['scrapeMd', 'scrapeHtml', 'scrapeImages', 'scrapeSitemap'] },
 				},
 				default: 30000,
-				description:
-					'Maximum time in milliseconds to wait for a response before the request fails.',
-				typeOptions: { minValue: 1, maxValue: 300000 },
+				description: 'Maximum time in milliseconds to wait for a response before the request fails',
+				typeOptions: { minValue: 1000, maxValue: 300000 },
 				routing: { request: { qs: { timeoutMS: '={{ $value }}' } } },
 			},
 			{
@@ -297,9 +449,8 @@ export const scrapingFields: INodeProperties[] = [
 				type: 'number',
 				displayOptions: { show: { '/operation': ['crawl'] } },
 				default: 30000,
-				description:
-					'Maximum time in milliseconds to wait for a response before the request fails.',
-				typeOptions: { minValue: 1, maxValue: 300000 },
+				description: 'Maximum time in milliseconds to wait for a response before the request fails',
+				typeOptions: { minValue: 1000, maxValue: 300000 },
 				routing: { request: { body: { timeoutMS: '={{ $value }}' } } },
 			},
 			{
