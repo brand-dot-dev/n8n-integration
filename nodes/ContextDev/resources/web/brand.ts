@@ -70,7 +70,7 @@ export const brandFields: INodeProperties[] = [
 				type: 'boolean',
 				displayOptions: { show: { '/operation': ['screenshot'] } },
 				default: false,
-				description: 'Capture the full scrollable page height instead of just the visible viewport',
+				description: 'Whether to capture the full scrollable page height instead of just the visible viewport',
 				routing: { request: { qs: { fullScreenshot: '={{ $value ? "true" : "false" }}' } } },
 			},
 			{
@@ -79,7 +79,7 @@ export const brandFields: INodeProperties[] = [
 				type: 'boolean',
 				displayOptions: { show: { '/operation': ['screenshot'] } },
 				default: false,
-				description: 'Attempt to dismiss cookie consent banners before taking the screenshot',
+				description: 'Whether to attempt to dismiss cookie consent banners before taking the screenshot',
 				routing: { request: { qs: { handleCookiePopup: '={{ $value ? "true" : "false" }}' } } },
 			},
 			{
@@ -134,7 +134,7 @@ export const brandFields: INodeProperties[] = [
 				name: 'timeoutMS',
 				type: 'number',
 				default: 30000,
-				description: 'Maximum time in milliseconds to wait for a response before the request fails.',
+				description: 'Maximum time in milliseconds to wait for a response before the request fails',
 				typeOptions: { minValue: 1, maxValue: 300000 },
 				routing: { request: { qs: { timeoutMS: '={{ $value }}' } } },
 			},

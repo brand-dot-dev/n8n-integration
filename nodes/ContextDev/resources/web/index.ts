@@ -32,7 +32,7 @@ const operationField: INodeProperties = {
 			name: 'Extract Competitors',
 			value: 'extractCompetitors',
 			action: 'Extract competitors for a domain',
-			description: 'Identify direct competitors for a given brand domain.',
+			description: 'Identify direct competitors for a given brand domain',
 			routing: { request: { method: 'GET', url: '/web/competitors' } },
 		},
 		{
