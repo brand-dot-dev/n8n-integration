@@ -173,13 +173,31 @@ describe('brand resource', () => {
 			expect(getAdditionalField(brandDescription, 'force_language')).toBeDefined();
 		});
 
-		it('transaction-only fields (mcc, city, country_gl, phone, high_confidence_only) have /operation scoped to identifyFromTransaction', () => {
-			const txFields = ['mcc', 'city', 'country_gl', 'phone', 'high_confidence_only'];
+		it('transaction-only fields (mcc, city, phone, high_confidence_only) have /operation scoped to identifyFromTransaction', () => {
+			const txFields = ['mcc', 'city', 'phone', 'high_confidence_only'];
 			for (const name of txFields) {
 				const field = getAdditionalField(brandDescription, name);
 				expect(field).toBeDefined();
 				expect(additionalFieldShowsFor(field!)).toEqual(['identifyFromTransaction']);
 			}
+		});
+
+		it('country_gl is scoped to identifyFromTransaction and retrieveByName (SDK supports both)', () => {
+			const field = getAdditionalField(brandDescription, 'country_gl');
+			expect(field).toBeDefined();
+			const scope = additionalFieldShowsFor(field!);
+			expect(scope).toEqual(expect.arrayContaining(['identifyFromTransaction', 'retrieveByName']));
+			expect(scope).toHaveLength(2);
+		});
+
+		it('country_gl is not scoped to operations whose SDK params lack it (retrieve, retrieveByEmail, retrieveByIsin, retrieveByTicker, retrieveSimplified)', () => {
+			const field = getAdditionalField(brandDescription, 'country_gl')!;
+			const scope = additionalFieldShowsFor(field);
+			expect(scope).not.toContain('retrieve');
+			expect(scope).not.toContain('retrieveByEmail');
+			expect(scope).not.toContain('retrieveByIsin');
+			expect(scope).not.toContain('retrieveByTicker');
+			expect(scope).not.toContain('retrieveSimplified');
 		});
 
 		it('phone is a string routing qs key "phone"', () => {
@@ -198,6 +216,39 @@ describe('brand resource', () => {
 			const field = getAdditionalField(brandDescription, 'ticker_exchange');
 			expect(field).toBeDefined();
 			expect(additionalFieldShowsFor(field!)).toEqual(['retrieveByTicker']);
+		});
+
+		it('ticker_exchange contains all 72 SDK exchange codes, defaulting to NASDAQ', () => {
+			const field = getAdditionalField(brandDescription, 'ticker_exchange')!;
+			const values = (field.options as { value: string }[]).map((o) => o.value);
+			const expectedCodes = [
+				'AMEX', 'AMS', 'AQS', 'ASX', 'ATH', 'BER', 'BME', 'BRU', 'BSE', 'BUD',
+				'BUE', 'BVC', 'CBOE', 'CNQ', 'CPH', 'DFM', 'DOH', 'DUB', 'DUS', 'DXE',
+				'EGX', 'FSX', 'HAM', 'HEL', 'HKSE', 'HOSE', 'ICE', 'IOB', 'IST', 'JKT',
+				'JNB', 'JPX', 'KLS', 'KOE', 'KSC', 'KUW', 'LIS', 'LSE', 'MCX', 'MEX',
+				'MIL', 'MUN', 'NASDAQ', 'NEO', 'NSE', 'NYSE', 'NZE', 'OSL', 'OTC', 'PAR',
+				'PNK', 'PRA', 'RIS', 'SAO', 'SAU', 'SES', 'SET', 'SGO', 'SHH', 'SHZ',
+				'SIX', 'STO', 'STU', 'TAI', 'TAL', 'TLV', 'TSX', 'TSXV', 'TWO', 'VIE',
+				'WSE', 'XETRA',
+			];
+			expect(expectedCodes).toHaveLength(72);
+			expect(values.sort()).toEqual([...expectedCodes].sort());
+			expect(field.default).toBe('NASDAQ');
+		});
+
+		it('ticker_exchange does not contain invalid codes SGX or SSE', () => {
+			const field = getAdditionalField(brandDescription, 'ticker_exchange')!;
+			const values = (field.options as { value: string }[]).map((o) => o.value);
+			expect(values).not.toContain('SGX');
+			expect(values).not.toContain('SSE');
+		});
+
+		it('ticker_exchange includes representative previously-missing codes', () => {
+			const field = getAdditionalField(brandDescription, 'ticker_exchange')!;
+			const values = (field.options as { value: string }[]).map((o) => o.value);
+			for (const code of ['LIS', 'MIL', 'PAR', 'SIX', 'XETRA', 'OTC', 'TSXV', 'CBOE']) {
+				expect(values).toContain(code);
+			}
 		});
 	});
 

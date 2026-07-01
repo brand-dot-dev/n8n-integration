@@ -146,10 +146,10 @@ describe('monitors resource', () => {
 			expect(sendOf(f)).toMatchObject({ property: 'target.normalize_whitespace' });
 		});
 
-		it('followSubdomains + prompt + schema show only for target extract', () => {
+		it('followSubdomains + instructions + schema show only for target extract', () => {
 			for (const [name, prop] of [
 				['followSubdomains', 'target.follow_subdomains'],
-				['extractPrompt', 'target.prompt'],
+				['extractPrompt', 'target.instructions'],
 				['extractSchema', 'target.schema'],
 			] as const) {
 				const f = getTopField(monitorsDescription, name)!;
@@ -162,6 +162,45 @@ describe('monitors resource', () => {
 			const f = getTopField(monitorsDescription, 'extractSchema')!;
 			expect(f.type).toBe('json');
 			expect(sendOf(f)!.value).toContain('JSON.parse');
+		});
+
+		it('extract max depth / max pages show only for target extract, as numbers', () => {
+			for (const [name, prop] of [
+				['extractMaxDepth', 'target.max_depth'],
+				['extractMaxPages', 'target.max_pages'],
+			] as const) {
+				const f = getTopField(monitorsDescription, name)!;
+				expect(f).toBeDefined();
+				expect(f.type).toBe('number');
+				expect((f.displayOptions?.show as Record<string, string[]>).targetType).toEqual(['extract']);
+				expect(sendOf(f)!.property).toBe(prop);
+			}
+		});
+
+		it('sitemap exclude/include/max_urls show only for target sitemap', () => {
+			const exclude = getTopField(monitorsDescription, 'sitemapExclude')!;
+			expect(exclude).toBeDefined();
+			expect((exclude.displayOptions?.show as Record<string, string[]>).targetType).toEqual([
+				'sitemap',
+			]);
+			expect(sendOf(exclude)!.property).toBe('target.exclude');
+			expect(sendOf(exclude)!.value).toContain('split');
+
+			const include = getTopField(monitorsDescription, 'sitemapInclude')!;
+			expect(include).toBeDefined();
+			expect((include.displayOptions?.show as Record<string, string[]>).targetType).toEqual([
+				'sitemap',
+			]);
+			expect(sendOf(include)!.property).toBe('target.include');
+			expect(sendOf(include)!.value).toContain('split');
+
+			const maxUrls = getTopField(monitorsDescription, 'sitemapMaxUrls')!;
+			expect(maxUrls).toBeDefined();
+			expect(maxUrls.type).toBe('number');
+			expect((maxUrls.displayOptions?.show as Record<string, string[]>).targetType).toEqual([
+				'sitemap',
+			]);
+			expect(sendOf(maxUrls)!.property).toBe('target.max_urls');
 		});
 	});
 
@@ -231,6 +270,50 @@ describe('monitors resource', () => {
 			const f = anyField(name)!;
 			expect(f).toBeDefined();
 			expect(sendOf(f)!.property).toBe(prop);
+		});
+
+		it('updChangeDetectionType is an options discriminator (exact/semantic) → change_detection.type', () => {
+			const f = anyField('updChangeDetectionType')!;
+			expect(f).toBeDefined();
+			expect(f.type).toBe('options');
+			expect((f.options as { value: string }[]).map((o) => o.value).sort()).toEqual([
+				'exact',
+				'semantic',
+			]);
+			expect(sendOf(f)!.property).toBe('change_detection.type');
+		});
+
+		it('updTargetType is an options discriminator (page/sitemap/extract) → target.type', () => {
+			const f = anyField('updTargetType')!;
+			expect(f).toBeDefined();
+			expect(f.type).toBe('options');
+			expect((f.options as { value: string }[]).map((o) => o.value).sort()).toEqual([
+				'extract',
+				'page',
+				'sitemap',
+			]);
+			expect(sendOf(f)!.property).toBe('target.type');
+		});
+
+		it.each([
+			['updSitemapMaxUrls', 'target.max_urls'],
+			['updExtractMaxDepth', 'target.max_depth'],
+			['updExtractMaxPages', 'target.max_pages'],
+			['updExtractInstructions', 'target.instructions'],
+		])('update parity field %s sends body path %s', (name, prop) => {
+			const f = anyField(name)!;
+			expect(f).toBeDefined();
+			expect(sendOf(f)!.property).toBe(prop);
+		});
+
+		it.each([
+			['updSitemapExclude', 'target.exclude'],
+			['updSitemapInclude', 'target.include'],
+		])('update parity field %s splits csv into %s', (name, prop) => {
+			const f = anyField(name)!;
+			expect(f).toBeDefined();
+			expect(sendOf(f)!.property).toBe(prop);
+			expect(sendOf(f)!.value).toContain('split');
 		});
 	});
 

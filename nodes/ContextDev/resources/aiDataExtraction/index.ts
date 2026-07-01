@@ -41,10 +41,31 @@ export const aiDataExtractionDescription: INodeProperties[] = [
 		name: 'domain',
 		type: 'string',
 		required: true,
-		displayOptions: { show: { ...show, operation: ['aiQuery', 'extractProducts'] } },
+		displayOptions: { show: { ...show, operation: ['aiQuery'] } },
 		default: '',
 		placeholder: 'stripe.com',
 		routing: { request: { body: { domain: '={{ $value }}' } } },
+	},
+	{
+		displayName: 'Domain',
+		name: 'domain',
+		type: 'string',
+		displayOptions: { show: { ...show, operation: ['extractProducts'] } },
+		default: '',
+		placeholder: 'stripe.com',
+		description: 'The domain to crawl for products. Provide either this or Direct URL.',
+		routing: { request: { body: { domain: '={{ $value || undefined }}' } } },
+	},
+	{
+		displayName: 'Direct URL',
+		name: 'directUrl',
+		type: 'string',
+		displayOptions: { show: { ...show, operation: ['extractProducts'] } },
+		default: '',
+		placeholder: 'https://example.com/shop',
+		description:
+			'A specific URL to use directly as the starting point for extraction, without domain resolution. Provide either this or Domain.',
+		routing: { request: { body: { directUrl: '={{ $value || undefined }}' } } },
 	},
 	{
 		displayName: 'Product URL',
@@ -107,6 +128,15 @@ export const aiDataExtractionDescription: INodeProperties[] = [
 						placeholder: 'company_tagline',
 					},
 					{
+						displayName: 'Object Schema (JSON)',
+						name: 'datapoint_object_schema',
+						type: 'json',
+						default: '',
+						placeholder: '{ "price": "number", "currency": "string" }',
+						description:
+							"Used only when List Item Type is 'Object'. A JSON map of field name to scalar type ('string', 'number', 'date', or 'boolean') describing the shape of each object to extract.",
+					},
+					{
 						displayName: 'Type',
 						name: 'datapoint_type',
 						type: 'options',
@@ -123,7 +153,14 @@ export const aiDataExtractionDescription: INodeProperties[] = [
 			],
 			},
 		],
-		routing: { request: { body: { data_to_extract: '={{ $value.datapoint }}' } } },
+		routing: {
+			request: {
+				body: {
+					data_to_extract:
+						"={{ ($value.datapoint || []).map((dp) => ({ ...dp, datapoint_object_schema: dp.datapoint_object_schema ? JSON.parse(dp.datapoint_object_schema) : undefined })) }}",
+				},
+			},
+		},
 	},
 	{
 		displayName: 'Additional Fields',
@@ -143,6 +180,17 @@ export const aiDataExtractionDescription: INodeProperties[] = [
 				default: 5,
 				typeOptions: { minValue: 1 },
 				routing: { request: { body: { maxProducts: '={{ $value }}' } } },
+			},
+			{
+				displayName: 'Max Age (Ms)',
+				name: 'maxAgeMs',
+				type: 'number',
+				displayOptions: { show: { '/operation': ['extractProduct', 'extractProducts'] } },
+				default: 604800000,
+				typeOptions: { minValue: 0, maxValue: 2592000000 },
+				description:
+					'Return a cached result if a prior scrape for the same parameters exists and is younger than this many milliseconds. Defaults to 7 days. Max is 30 days. Set to 0 to always scrape fresh.',
+				routing: { request: { body: { maxAgeMs: '={{ $value }}' } } },
 			},
 			{
 				displayName: 'Pages to Analyze',

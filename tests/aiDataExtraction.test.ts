@@ -10,6 +10,7 @@ import {
 	showsForOperations,
 	additionalFieldShowsFor,
 	getFixedCollectionValues,
+	bodyKeyFor,
 } from './helpers';
 
 describe('aiDataExtraction resource', () => {
@@ -61,11 +62,16 @@ describe('aiDataExtraction resource', () => {
 			expect(field?.required).toBe(true);
 		});
 
-		it('domain is required for extractProducts', () => {
+		it('domain is optional for extractProducts (directUrl is an alternative)', () => {
 			const field = getAllTopFields(aiDataExtractionDescription, 'domain').find((f) =>
 				showsForOperations(f).includes('extractProducts'),
 			);
-			expect(field?.required).toBe(true);
+			expect(field?.required).toBeFalsy();
+		});
+
+		it('directUrl is optional for extractProducts (domain is an alternative)', () => {
+			const field = getTopField(aiDataExtractionDescription, 'directUrl');
+			expect(field?.required).toBeFalsy();
 		});
 
 		it('url is required for extractProduct', () => {
@@ -82,14 +88,23 @@ describe('aiDataExtraction resource', () => {
 	// ─── displayOptions scoping ────────────────────────────────────────────────
 
 	describe('displayOptions scoping', () => {
-		it('domain shows for aiQuery and extractProducts, not extractProduct', () => {
+		it('domain (aiQuery variant) shows only for aiQuery', () => {
 			const domainField = getAllTopFields(aiDataExtractionDescription, 'domain').find((f) =>
 				showsForOperations(f).includes('aiQuery'),
 			)!;
-			const ops = showsForOperations(domainField);
-			expect(ops).toContain('aiQuery');
-			expect(ops).toContain('extractProducts');
-			expect(ops).not.toContain('extractProduct');
+			expect(showsForOperations(domainField)).toEqual(['aiQuery']);
+		});
+
+		it('domain (extractProducts variant) shows only for extractProducts', () => {
+			const domainField = getAllTopFields(aiDataExtractionDescription, 'domain').find((f) =>
+				showsForOperations(f).includes('extractProducts'),
+			)!;
+			expect(showsForOperations(domainField)).toEqual(['extractProducts']);
+		});
+
+		it('directUrl shows only for extractProducts', () => {
+			const field = getTopField(aiDataExtractionDescription, 'directUrl')!;
+			expect(showsForOperations(field)).toEqual(['extractProducts']);
 		});
 
 		it('url shows only for extractProduct', () => {
@@ -121,6 +136,12 @@ describe('aiDataExtraction resource', () => {
 		it('data_to_extract uses body routing', () => {
 			const field = getTopField(aiDataExtractionDescription, 'data_to_extract')!;
 			expect(usesBodyRouting(field)).toBe(true);
+		});
+
+		it('directUrl uses body routing to directUrl', () => {
+			const field = getTopField(aiDataExtractionDescription, 'directUrl')!;
+			expect(usesBodyRouting(field)).toBe(true);
+			expect(bodyKeyFor(field)).toBe('directUrl');
 		});
 	});
 
@@ -162,6 +183,18 @@ describe('aiDataExtraction resource', () => {
 			expect(names).toContain('datapoint_description');
 			expect(names).toContain('datapoint_example');
 		});
+
+		it('has a datapoint_object_schema field of type json (used when list_type is object)', () => {
+			const values = getFixedCollectionValues(aiDataExtractionDescription, 'data_to_extract');
+			const field = values.find((v) => v.name === 'datapoint_object_schema');
+			expect(field).toBeDefined();
+			expect(field?.type).toBe('json');
+		});
+
+		it('data_to_extract routing still maps into body.data_to_extract', () => {
+			const field = getTopField(aiDataExtractionDescription, 'data_to_extract')!;
+			expect(bodyKeyFor(field)).toBe('data_to_extract');
+		});
 	});
 
 	// ─── additionalFields ──────────────────────────────────────────────────────
@@ -196,6 +229,19 @@ describe('aiDataExtraction resource', () => {
 
 		it('timeoutMS exists', () => {
 			expect(getAdditionalField(aiDataExtractionDescription, 'timeoutMS')).toBeDefined();
+		});
+
+		it('maxAgeMs exists, is type number, and routes to body.maxAgeMs', () => {
+			const field = getAdditionalField(aiDataExtractionDescription, 'maxAgeMs')!;
+			expect(field).toBeDefined();
+			expect(field.type).toBe('number');
+			expect(bodyKeyFor(field)).toBe('maxAgeMs');
+		});
+
+		it('maxAgeMs is scoped to extractProduct and extractProducts only', () => {
+			const field = getAdditionalField(aiDataExtractionDescription, 'maxAgeMs')!;
+			const ops = additionalFieldShowsFor(field);
+			expect(ops.sort()).toEqual(['extractProduct', 'extractProducts'].sort());
 		});
 	});
 

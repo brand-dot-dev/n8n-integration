@@ -16,6 +16,8 @@ import {
 	bodyKeyFor,
 	arrayFormatFor,
 	getAdditionalFieldFor,
+	sendPropertyFor,
+	sendTypeFor,
 } from './helpers';
 
 describe('web resource', () => {
@@ -636,6 +638,77 @@ describe('web resource', () => {
 		it('country is NOT offered for extractStyleguide (SDK has no country there)', () => {
 			expect(getAdditionalFieldFor(webDescription, 'country', 'extractStyleguide')).toBeUndefined();
 			expect(getAdditionalFieldFor(webDescription, 'countryPost', 'extractStyleguide')).toBeUndefined();
+		});
+	});
+
+	// ─── search markdownOptions sub-fields (capability drop fix) ────────────────
+	// markdownEnabled only ever sent markdownOptions.enabled — once a user turned
+	// scraping on for search results, there was no way to configure it. These
+	// fields expose the rest of WebSearchParams.MarkdownOptions from the SDK.
+
+	describe('search markdownOptions sub-fields', () => {
+		const booleanCases: [name: string, apiPath: string][] = [
+			['markdownIncludeFrames', 'markdownOptions.includeFrames'],
+			['markdownIncludeImages', 'markdownOptions.includeImages'],
+			['markdownIncludeLinks', 'markdownOptions.includeLinks'],
+			['markdownUseMainContentOnly', 'markdownOptions.useMainContentOnly'],
+			['markdownShortenBase64Images', 'markdownOptions.shortenBase64Images'],
+		];
+
+		it.each(booleanCases)('%s is a boolean scoped to search, sending body via "%s"', (name, apiPath) => {
+			const f = getAdditionalField(webDescription, name);
+			expect(f).toBeDefined();
+			expect(f!.type).toBe('boolean');
+			expect(additionalFieldShowsFor(f!)).toEqual(['search']);
+			expect(sendTypeFor(f!)).toBe('body');
+			expect(sendPropertyFor(f!)).toBe(apiPath);
+		});
+
+		const numberCases: [name: string, apiPath: string][] = [
+			['markdownMaxAgeMs', 'markdownOptions.maxAgeMs'],
+			['markdownTimeoutMS', 'markdownOptions.timeoutMS'],
+			['markdownWaitForMs', 'markdownOptions.waitForMs'],
+		];
+
+		it.each(numberCases)('%s is a number scoped to search, sending body via "%s"', (name, apiPath) => {
+			const f = getAdditionalField(webDescription, name);
+			expect(f).toBeDefined();
+			expect(f!.type).toBe('number');
+			expect(additionalFieldShowsFor(f!)).toEqual(['search']);
+			expect(sendTypeFor(f!)).toBe('body');
+			expect(sendPropertyFor(f!)).toBe(apiPath);
+		});
+
+		it('all markdownOptions sub-fields only display when markdownEnabled is true', () => {
+			const names = [...booleanCases, ...numberCases].map(([name]) => name);
+			for (const name of names) {
+				const f = getAdditionalField(webDescription, name)!;
+				const show = f.displayOptions?.show as Record<string, unknown> | undefined;
+				expect(show?.['/markdownEnabled']).toEqual([true]);
+			}
+		});
+
+		describe('markdownPdf nested collection', () => {
+			it('is a collection scoped to search, sending body via "markdownOptions.pdf"', () => {
+				const f = getAdditionalField(webDescription, 'markdownPdf');
+				expect(f).toBeDefined();
+				expect(f!.type).toBe('collection');
+				expect(additionalFieldShowsFor(f!)).toEqual(['search']);
+				expect(sendTypeFor(f!)).toBe('body');
+				expect(sendPropertyFor(f!)).toBe('markdownOptions.pdf');
+			});
+
+			it('exposes start, end, shouldParse sub-fields (matches SDK MarkdownOptions.Pdf)', () => {
+				const f = getAdditionalField(webDescription, 'markdownPdf')!;
+				const names = (f.options as { name: string }[]).map((o) => o.name).sort();
+				expect(names).toEqual(['end', 'shouldParse', 'start']);
+			});
+
+			it('only displays when markdownEnabled is true', () => {
+				const f = getAdditionalField(webDescription, 'markdownPdf')!;
+				const show = f.displayOptions?.show as Record<string, unknown> | undefined;
+				expect(show?.['/markdownEnabled']).toEqual([true]);
+			});
 		});
 	});
 });
