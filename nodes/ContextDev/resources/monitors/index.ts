@@ -494,20 +494,43 @@ const updateFields: INodeProperties[] = [
 				routing: { send: { type: 'body', property: 'target.normalize_whitespace' } },
 			},
 			{
-				displayName: 'Schedule Frequency',
-				name: 'updScheduleFrequency',
-				type: 'number',
-				default: 6,
-				typeOptions: { minValue: 1 },
-				routing: { send: { type: 'body', property: 'schedule.frequency' } },
-			},
-			{
-				displayName: 'Schedule Unit',
-				name: 'updScheduleUnit',
-				type: 'options',
-				default: 'hours',
-				options: UNIT_OPTIONS,
-				routing: { send: { type: 'body', property: 'schedule.unit' } },
+				// The SDK requires schedule.type whenever schedule is sent, so frequency + unit
+				// are grouped and the constant type is injected — sent only when the group is set.
+				displayName: 'Schedule',
+				name: 'updSchedule',
+				type: 'fixedCollection',
+				default: {},
+				description: 'Change the run interval (the required schedule type is sent automatically)',
+				options: [
+					{
+						name: 'schedule',
+						displayName: 'Schedule',
+						values: [
+							{
+								displayName: 'Frequency',
+								name: 'frequency',
+								type: 'number',
+								default: 6,
+								typeOptions: { minValue: 1 },
+							},
+							{
+								displayName: 'Unit',
+								name: 'unit',
+								type: 'options',
+								default: 'hours',
+								options: UNIT_OPTIONS,
+							},
+						],
+					},
+				],
+				routing: {
+					request: {
+						body: {
+							schedule:
+								'={{ { type: "interval", frequency: $value.schedule.frequency, unit: $value.schedule.unit } }}',
+						},
+					},
+				},
 			},
 			{
 				displayName: 'Status',
@@ -542,6 +565,14 @@ const updateFields: INodeProperties[] = [
 				type: 'string',
 				default: '',
 				routing: { send: { type: 'body', property: 'webhook.url' } },
+			},
+			{
+				displayName: 'Remove Webhook',
+				name: 'updWebhookRemove',
+				type: 'boolean',
+				default: false,
+				description: 'Whether to remove the monitor\'s existing webhook (sends webhook: null)',
+				routing: { request: { body: { webhook: '={{ $value ? null : undefined }}' } } },
 			},
 		],
 	},

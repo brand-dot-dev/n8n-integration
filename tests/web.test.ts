@@ -323,12 +323,21 @@ describe('web resource', () => {
 			expect(additionalFieldShowsFor(field)).toEqual(['search']);
 		});
 
-		it('directUrl is scoped to screenshot, extractStyleguide, extractFonts', () => {
+		it('directUrl is scoped to all four visual ops (screenshot, styleguide, fonts, competitors)', () => {
 			const field = getAdditionalField(webDescription, 'directUrl')!;
 			const ops = additionalFieldShowsFor(field);
 			expect(ops).toContain('screenshot');
 			expect(ops).toContain('extractStyleguide');
 			expect(ops).toContain('extractFonts');
+			expect(ops).toContain('extractCompetitors');
+		});
+
+		it('visual-op domain is NOT required and omits empty values (enables directUrl-only)', () => {
+			const domain = getAllTopFields(webDescription, 'domain').find((f) =>
+				showsForOperations(f).includes('screenshot'),
+			)!;
+			expect(domain.required).not.toBe(true);
+			expect((domain.routing?.request?.qs as Record<string, string>).domain).toContain('|| undefined');
 		});
 	});
 

@@ -173,6 +173,14 @@ describe('brand resource', () => {
 			expect(getAdditionalField(brandDescription, 'force_language')).toBeDefined();
 		});
 
+		it('force_language exposes the full SDK language enum (120 values incl. afrikaans/welsh/zulu)', () => {
+			const f = getAdditionalField(brandDescription, 'force_language')!;
+			const values = (f.options as { value: string }[]).map((o) => o.value);
+			expect(values.length).toBe(120);
+			for (const v of ['afrikaans', 'welsh', 'zulu', 'english', 'latin', 'yoruba'])
+				expect(values).toContain(v);
+		});
+
 		it('transaction-only fields (mcc, city, phone, high_confidence_only) have /operation scoped to identifyFromTransaction', () => {
 			const txFields = ['mcc', 'city', 'phone', 'high_confidence_only'];
 			for (const name of txFields) {

@@ -5,14 +5,16 @@ const visualOps = ['screenshot', 'extractStyleguide', 'extractFonts', 'extractCo
 
 export const brandFields: INodeProperties[] = [
 	{
+		// The SDK accepts EITHER domain OR directUrl (not both), so domain is not required —
+		// an empty value is omitted so a directUrl-only request is possible.
 		displayName: 'Domain',
 		name: 'domain',
 		type: 'string',
-		required: true,
 		displayOptions: { show: { ...show, operation: visualOps } },
 		default: '',
 		placeholder: 'stripe.com',
-		routing: { request: { qs: { domain: '={{ $value }}' } } },
+		description: 'Company domain. Provide either Domain or Direct URL (in Additional Fields), not both.',
+		routing: { request: { qs: { domain: '={{ $value || undefined }}' } } },
 	},
 
 	{
@@ -52,11 +54,15 @@ export const brandFields: INodeProperties[] = [
 				displayName: 'Direct URL',
 				name: 'directUrl',
 				type: 'string',
-				displayOptions: { show: { '/operation': ['screenshot', 'extractStyleguide', 'extractFonts'] } },
+				displayOptions: {
+					show: {
+						'/operation': ['screenshot', 'extractStyleguide', 'extractFonts', 'extractCompetitors'],
+					},
+				},
 				default: '',
 				placeholder: 'https://example.com/design-system',
-				description: 'Fetch from this exact URL instead of resolving from the domain',
-				routing: { request: { qs: { directUrl: '={{ $value }}' } } },
+				description: 'Fetch from this exact URL instead of resolving from the domain. Alternative to Domain (not both).',
+				routing: { request: { qs: { directUrl: '={{ $value || undefined }}' } } },
 			},
 			{
 				displayName: 'Full Page Screenshot',

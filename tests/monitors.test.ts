@@ -262,14 +262,29 @@ describe('monitors resource', () => {
 
 		it.each([
 			['updName', 'name'],
-			['updScheduleFrequency', 'schedule.frequency'],
-			['updScheduleUnit', 'schedule.unit'],
 			['updWebhookUrl', 'webhook.url'],
 			['updQuery', 'change_detection.query'],
 		])('update field %s sends body path %s', (name, prop) => {
 			const f = anyField(name)!;
 			expect(f).toBeDefined();
 			expect(sendOf(f)!.property).toBe(prop);
+		});
+
+		it('update schedule is a fixedCollection that always injects the required schedule.type', () => {
+			const f = anyField('updSchedule')!;
+			expect(f).toBeDefined();
+			expect(f.type).toBe('fixedCollection');
+			const expr = (f.routing?.request?.body as Record<string, string>).schedule;
+			expect(expr).toContain('type: "interval"');
+			expect(expr).toContain('frequency');
+			expect(expr).toContain('unit');
+		});
+
+		it('updWebhookRemove clears the webhook by sending null', () => {
+			const f = anyField('updWebhookRemove')!;
+			expect(f).toBeDefined();
+			expect(f.type).toBe('boolean');
+			expect((f.routing?.request?.body as Record<string, string>).webhook).toContain('null');
 		});
 
 		it('updChangeDetectionType is an options discriminator (exact/semantic) → change_detection.type', () => {

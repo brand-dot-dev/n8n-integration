@@ -114,9 +114,11 @@ export const aiDataExtractionDescription: INodeProperties[] = [
 						options: [
 							{ name: 'Boolean', value: 'boolean' },
 							{ name: 'Date', value: 'date' },
+							{ name: 'List', value: 'list' },
 							{ name: 'Number', value: 'number' },
 							{ name: 'Object', value: 'object' },
 							{ name: 'String', value: 'string' },
+							{ name: 'Text', value: 'text' },
 							{ name: 'URL', value: 'url' },
 						]
 					},

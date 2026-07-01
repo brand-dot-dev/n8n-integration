@@ -176,6 +176,13 @@ describe('aiDataExtraction resource', () => {
 			expect(values.find((v) => v.name === 'datapoint_list_type')).toBeDefined();
 		});
 
+		it('datapoint_list_type offers the full SDK enum incl. list + text', () => {
+			const values = getFixedCollectionValues(aiDataExtractionDescription, 'data_to_extract');
+			const lt = values.find((v) => v.name === 'datapoint_list_type')!;
+			const opts = (lt.options as { value: string }[]).map((o) => o.value).sort();
+			expect(opts).toEqual(['boolean', 'date', 'list', 'number', 'object', 'string', 'text', 'url']);
+		});
+
 		it('has datapoint_name, datapoint_description, datapoint_example fields', () => {
 			const values = getFixedCollectionValues(aiDataExtractionDescription, 'data_to_extract');
 			const names = values.map((v) => v.name);
