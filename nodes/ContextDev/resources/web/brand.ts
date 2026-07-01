@@ -24,6 +24,31 @@ export const brandFields: INodeProperties[] = [
 		displayOptions: { show: { ...show, operation: visualOps } },
 		options: [
 			{
+				displayName: 'Color Scheme',
+				name: 'colorScheme',
+				type: 'options',
+				displayOptions: { show: { '/operation': ['screenshot', 'extractStyleguide'] } },
+				default: '',
+				options: [
+					{ name: 'Auto (Default)', value: '' },
+					{ name: 'Light', value: 'light' },
+					{ name: 'Dark', value: 'dark' },
+				],
+				description: 'Preferred color scheme to request from the target page',
+				routing: { request: { qs: { colorScheme: '={{ $value }}' } } },
+			},
+			{
+				displayName: 'Country',
+				name: 'country',
+				type: 'string',
+				displayOptions: { show: { '/operation': ['screenshot'] } },
+				default: '',
+				placeholder: 'us',
+				description:
+					'Two-letter ISO 3166-1 alpha-2 country code to fetch the page from that location',
+				routing: { request: { qs: { country: '={{ $value }}' } } },
+			},
+			{
 				displayName: 'Direct URL',
 				name: 'directUrl',
 				type: 'string',
@@ -86,6 +111,17 @@ export const brandFields: INodeProperties[] = [
 					{ name: 'Terms', value: 'terms' },
 				],
 				routing: { request: { qs: { page: '={{ $value }}' } } },
+			},
+			{
+				displayName: 'Scroll Offset',
+				name: 'scrollOffset',
+				type: 'number',
+				displayOptions: { show: { '/operation': ['screenshot'] } },
+				default: 0,
+				description:
+					'Vertical scroll offset in pixels to capture a long page in viewport-sized slices. Takes precedence over Full Page Screenshot. Max 100,000.',
+				typeOptions: { minValue: 0, maxValue: 100000 },
+				routing: { request: { qs: { scrollOffset: '={{ $value }}' } } },
 			},
 			{
 				displayName: 'Timeout (Ms)',

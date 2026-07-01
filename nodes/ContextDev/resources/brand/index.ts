@@ -245,6 +245,9 @@ export const brandDescription: INodeProperties[] = [
 				routing: { request: { qs: { mcc: '={{ $value }}' } } },
 			},
 			{
+				// SDK types `phone` as number; we deliberately expose it as a string so users can
+				// enter real phone formats (leading +, spaces) that aren't valid JS numbers. The
+				// value is passed through verbatim as the `phone` query param.
 				displayName: 'Phone',
 				name: 'phone',
 				type: 'string',

@@ -58,6 +58,17 @@ export const searchExtractFields: INodeProperties[] = [
 				},
 			},
 			{
+				displayName: 'Country',
+				name: 'country',
+				type: 'string',
+				displayOptions: { show: { '/operation': ['search'] } },
+				default: '',
+				placeholder: 'us',
+				description:
+					'Two-letter ISO 3166-1 alpha-2 country code to run the search from that location',
+				routing: { request: { body: { country: '={{ $value }}' } } },
+			},
+			{
 				displayName: 'Fact Check',
 				name: 'factCheck',
 				type: 'boolean',
@@ -188,6 +199,16 @@ export const searchExtractFields: INodeProperties[] = [
 					},
 				],
 				routing: { request: { body: { pdf: '={{ $value }}' } } },
+			},
+			{
+				displayName: 'Number of Results',
+				name: 'numResults',
+				type: 'number',
+				displayOptions: { show: { '/operation': ['search'] } },
+				default: 10,
+				description: 'Number of results to request and return. Between 10 and 100.',
+				typeOptions: { minValue: 10, maxValue: 100 },
+				routing: { request: { body: { numResults: '={{ $value }}' } } },
 			},
 			{
 				displayName: 'Query Fanout',

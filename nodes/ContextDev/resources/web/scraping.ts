@@ -320,6 +320,28 @@ export const scrapingFields: INodeProperties[] = [
 				routing: { request: { body: { shortenBase64Images: '={{ $value }}' } } },
 			},
 			{
+				displayName: 'Country',
+				name: 'country',
+				type: 'string',
+				displayOptions: { show: { '/operation': ['scrapeMd', 'scrapeHtml'] } },
+				default: '',
+				placeholder: 'us',
+				description:
+					'Two-letter ISO 3166-1 alpha-2 country code to fetch the page from that location',
+				routing: { request: { qs: { country: '={{ $value }}' } } },
+			},
+			{
+				displayName: 'Country',
+				name: 'countryPost',
+				type: 'string',
+				displayOptions: { show: { '/operation': ['crawl'] } },
+				default: '',
+				placeholder: 'us',
+				description:
+					'Two-letter ISO 3166-1 alpha-2 country code to fetch pages from that location',
+				routing: { request: { body: { country: '={{ $value }}' } } },
+			},
+			{
 				displayName: 'Custom Headers',
 				name: 'headers',
 				type: 'fixedCollection',

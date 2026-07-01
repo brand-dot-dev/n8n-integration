@@ -504,17 +504,20 @@ describe('web resource', () => {
 			expect(subNames(f)).toEqual(['end', 'shouldParse', 'start']);
 		});
 
-		it('crawl pdf routes to body key "pdf"', () => {
+		it('crawl pdf routes to body key "pdf", scoped to crawl only', () => {
 			const f = getAdditionalFieldFor(webDescription, 'pdfPost', 'crawl')!;
 			expect(f.type).toBe('collection');
 			expect(bodyKeyFor(f)).toBe('pdf');
+			expect(additionalFieldShowsFor(f)).toEqual(['crawl']);
 			expect(subNames(f)).toEqual(['end', 'shouldParse', 'start']);
 		});
 
-		it('extract pdf routes to body key "pdf"', () => {
+		it('extract pdf routes to body key "pdf", scoped to extract, with all sub-fields', () => {
 			const f = getAdditionalFieldFor(webDescription, 'pdf', 'extract')!;
 			expect(f.type).toBe('collection');
 			expect(bodyKeyFor(f)).toBe('pdf');
+			expect(additionalFieldShowsFor(f)).toEqual(['extract']);
+			expect(subNames(f)).toEqual(['end', 'shouldParse', 'start']);
 		});
 	});
 
@@ -529,15 +532,17 @@ describe('web resource', () => {
 	});
 
 	describe('shortenBase64Images', () => {
-		it('GET variant (scrapeMd) routes to qs', () => {
+		it('GET variant (scrapeMd) routes to qs, scoped to scrapeMd only', () => {
 			const f = getAdditionalFieldFor(webDescription, 'shortenBase64Images', 'scrapeMd')!;
 			expect(f.type).toBe('boolean');
 			expect(qsKeyFor(f)).toBe('shortenBase64Images');
+			expect(additionalFieldShowsFor(f)).toEqual(['scrapeMd']);
 		});
 
-		it('POST variant (crawl) routes to body', () => {
+		it('POST variant (crawl) routes to body, scoped to crawl only', () => {
 			const f = getAdditionalFieldFor(webDescription, 'shortenBase64ImagesPost', 'crawl')!;
 			expect(bodyKeyFor(f)).toBe('shortenBase64Images');
+			expect(additionalFieldShowsFor(f)).toEqual(['crawl']);
 		});
 	});
 
@@ -548,6 +553,89 @@ describe('web resource', () => {
 			expect(additionalFieldShowsFor(f)).toEqual(['screenshot']);
 			expect(qsKeyFor(f)).toBe('viewport');
 			expect(subNames(f)).toEqual(['height', 'width']);
+		});
+	});
+
+	// ─── SDK 1.41 web params (colorScheme, country, numResults, scrollOffset) ────
+	describe('colorScheme (SDK 1.41)', () => {
+		it('is an options field offering light + dark', () => {
+			const f = getAdditionalField(webDescription, 'colorScheme')!;
+			expect(f).toBeDefined();
+			expect(f.type).toBe('options');
+			const values = (f.options as { value: string }[]).map((o) => o.value);
+			expect(values).toContain('light');
+			expect(values).toContain('dark');
+		});
+
+		it('is scoped to screenshot + extractStyleguide and routes to qs key "colorScheme"', () => {
+			const f = getAdditionalField(webDescription, 'colorScheme')!;
+			expect(additionalFieldShowsFor(f).sort()).toEqual(['extractStyleguide', 'screenshot']);
+			expect(qsKeyFor(f)).toBe('colorScheme');
+		});
+
+		it('defaults to "" (Auto)', () => {
+			expect(getAdditionalField(webDescription, 'colorScheme')!.default).toBe('');
+		});
+	});
+
+	describe('scrollOffset (SDK 1.41)', () => {
+		it('is a number scoped to screenshot, routing qs key "scrollOffset"', () => {
+			const f = getAdditionalField(webDescription, 'scrollOffset')!;
+			expect(f).toBeDefined();
+			expect(f.type).toBe('number');
+			expect(additionalFieldShowsFor(f)).toEqual(['screenshot']);
+			expect(qsKeyFor(f)).toBe('scrollOffset');
+		});
+
+		it('bounds match SDK (0..100000, default 0)', () => {
+			const f = getAdditionalField(webDescription, 'scrollOffset')!;
+			expect(f.default).toBe(0);
+			expect((f.typeOptions as { minValue?: number; maxValue?: number }).minValue).toBe(0);
+			expect((f.typeOptions as { minValue?: number; maxValue?: number }).maxValue).toBe(100000);
+		});
+	});
+
+	describe('numResults (SDK 1.41)', () => {
+		it('is a number scoped to search, routing body key "numResults"', () => {
+			const f = getAdditionalField(webDescription, 'numResults')!;
+			expect(f).toBeDefined();
+			expect(f.type).toBe('number');
+			expect(additionalFieldShowsFor(f)).toEqual(['search']);
+			expect(bodyKeyFor(f)).toBe('numResults');
+		});
+
+		it('bounds match SDK (10..100, default 10)', () => {
+			const f = getAdditionalField(webDescription, 'numResults')!;
+			expect(f.default).toBe(10);
+			expect((f.typeOptions as { minValue?: number; maxValue?: number }).minValue).toBe(10);
+			expect((f.typeOptions as { minValue?: number; maxValue?: number }).maxValue).toBe(100);
+		});
+	});
+
+	describe('country (SDK 1.41)', () => {
+		// exact op×routing matrix from the SDK: qs for GET ops, body for POST ops.
+		// The two GET scrape ops share one qs field; screenshot/crawl/search each get their own.
+		const cases: [op: string, fieldName: string, loc: 'qs' | 'body', show: string[]][] = [
+			['scrapeMd', 'country', 'qs', ['scrapeMd', 'scrapeHtml']],
+			['scrapeHtml', 'country', 'qs', ['scrapeMd', 'scrapeHtml']],
+			['screenshot', 'country', 'qs', ['screenshot']],
+			['crawl', 'countryPost', 'body', ['crawl']],
+			['search', 'country', 'body', ['search']],
+		];
+
+		it.each(cases)('%s: string field routes country via %s with exact scoping', (op, name, loc, show) => {
+			const f = getAdditionalFieldFor(webDescription, name, op)!;
+			expect(f).toBeDefined();
+			expect(f.type).toBe('string');
+			expect(f.default).toBe('');
+			expect(additionalFieldShowsFor(f).sort()).toEqual([...show].sort());
+			if (loc === 'qs') expect(qsKeyFor(f)).toBe('country');
+			else expect(bodyKeyFor(f)).toBe('country');
+		});
+
+		it('country is NOT offered for extractStyleguide (SDK has no country there)', () => {
+			expect(getAdditionalFieldFor(webDescription, 'country', 'extractStyleguide')).toBeUndefined();
+			expect(getAdditionalFieldFor(webDescription, 'countryPost', 'extractStyleguide')).toBeUndefined();
 		});
 	});
 });
