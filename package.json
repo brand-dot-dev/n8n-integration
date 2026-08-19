@@ -1,19 +1,19 @@
 {
-  "name": "n8n-nodes-branddev",
-  "version": "1.3.0",
-  "description": "n8n node for Brand.dev API - retrieve brand data, screenshots, and company information",
+  "name": "n8n-nodes-context-dev",
+  "version": "3.0.0",
+  "description": "n8n community node for Context.dev API \u2014 brand intelligence, web scraping, AI extraction, monitoring, batch, and web databases",
   "license": "MIT",
-  "homepage": "https://github.com/brand-dot-dev/n8n-integration#readme",
+  "homepage": "https://github.com/context-dot-dev/n8n-integration#readme",
   "keywords": [
     "n8n-community-node-package"
   ],
   "author": {
     "name": "Yahia Bakour",
-    "email": "yahia@brand.dev"
+    "email": "yahia@context.dev"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/brand-dot-dev/n8n-integration.git"
+    "url": "https://github.com/context-dot-dev/n8n-integration.git"
   },
   "scripts": {
     "build": "n8n-node build",
@@ -21,9 +21,10 @@
     "dev": "n8n-node dev",
     "lint": "n8n-node lint",
     "lint:fix": "n8n-node lint --fix",
-    "test": "npm run lint",
+    "test": "npm run lint && npm run build",
     "release": "n8n-node release",
-    "prepublishOnly": "n8n-node prerelease"
+    "prepublishOnly": "n8n-node prerelease",
+    "test:live": "node tests/live/run-live.mjs"
   },
   "files": [
     "dist"
@@ -32,10 +33,10 @@
     "n8nNodesApiVersion": 1,
     "strict": true,
     "credentials": [
-      "dist/credentials/BranddevApi.credentials.js"
+      "dist/credentials/ContextdevApi.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/Branddev/Branddev.node.js"
+      "dist/nodes/ContextDev/ContextDev.node.js"
     ]
   },
   "devDependencies": {
@@ -43,6 +44,7 @@
     "eslint": "9.32.0",
     "prettier": "3.6.2",
     "release-it": "^19.0.4",
+    "ts-node": "^10.9.2",
     "typescript": "5.9.2"
   },
   "peerDependencies": {

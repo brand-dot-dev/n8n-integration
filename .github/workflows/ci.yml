@@ -26,3 +26,10 @@ jobs:
 
       - name: Run build
         run: 'npm run build'
+
+      # Live conformance runs only where an API key is available (skipped on forks).
+      - name: Live conformance
+        if: ${{ env.CONTEXT_DEV_API_KEY != '' }}
+        env:
+          CONTEXT_DEV_API_KEY: ${{ secrets.CONTEXT_DEV_API_KEY }}
+        run: 'node tests/live/run-live.mjs --delay 150'

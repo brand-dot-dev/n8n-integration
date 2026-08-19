@@ -1,0 +1,839 @@
+{
+  "$comment": "Live-suite fixtures. `args` are keyed by the parameter names the node sends. Fill in `needsValues` entries and delete the marker to enable an operation; supply real ids to enable the needs-id ones.",
+  "apiKeyEnv": "CONTEXT_DEV_API_KEY",
+  "tags": [
+    "n8n-live-test"
+  ],
+  "lifecycles": [
+    {
+      "name": "monitor",
+      "create": "monitors.createMonitor",
+      "captures": [
+        "monitor_id"
+      ],
+      "delete": "monitors.deleteMonitor"
+    },
+    {
+      "name": "batch",
+      "create": "batch.submitBatch",
+      "captures": [
+        "batch_id"
+      ],
+      "_note": "no delete: the documented DELETE /batch/{batch_id} is not implemented server-side; cancelled batches are terminal and remain listed"
+    }
+  ],
+  "fixtures": [
+    {
+      "resource": "news",
+      "operation": "searchCompanyNews",
+      "label": "Search company news",
+      "risk": "read",
+      "args": {
+        "searchBy.entity.name": "Context.dev",
+        "searchBy.entity.domain": "context.dev",
+        "searchBy.entity.ticker": "AAPL",
+        "searchBy.entity.isin": "US0378331005"
+      },
+      "needsValues": [
+        "searchBy.type",
+        "searchBy.entity.type",
+        "sortBy.type"
+      ],
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "parsing",
+      "operation": "parseBytes",
+      "label": "Parse Bytes",
+      "risk": "read",
+      "args": {},
+      "needsBinary": true,
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "webScraping",
+      "operation": "scrapeHTML",
+      "label": "Scrape HTML",
+      "risk": "read",
+      "args": {
+        "url": "https://context.dev"
+      },
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "webScraping",
+      "operation": "scrapeMarkdown",
+      "label": "Scrape Markdown",
+      "risk": "read",
+      "args": {
+        "url": "https://context.dev"
+      },
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "webScraping",
+      "operation": "scrapeImages",
+      "label": "Scrape Images",
+      "risk": "read",
+      "args": {
+        "url": "https://context.dev"
+      },
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "webScraping",
+      "operation": "crawlSitemap",
+      "label": "Crawl Sitemap",
+      "risk": "read",
+      "args": {
+        "domain": "context.dev"
+      },
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "webScraping",
+      "operation": "crawlWebsiteScrapeMarkdown",
+      "label": "Crawl Website & Scrape Markdown",
+      "risk": "read",
+      "args": {
+        "url": "https://context.dev"
+      },
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "webScraping",
+      "operation": "webSearch",
+      "label": "Web Search",
+      "risk": "read",
+      "args": {
+        "query": "context.dev"
+      },
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "webScraping",
+      "operation": "scrapeScreenshot",
+      "label": "Scrape Screenshot",
+      "risk": "read",
+      "args": {
+        "domain": "context.dev"
+      },
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "webExtraction",
+      "operation": "extractStructuredWebsiteData",
+      "label": "Extract Structured Website Data",
+      "risk": "read",
+      "args": {
+        "url": "https://context.dev",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "webExtraction",
+      "operation": "findWebsiteCompetitors",
+      "label": "Find website competitors",
+      "risk": "read",
+      "args": {
+        "domain": "context.dev"
+      },
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "webExtraction",
+      "operation": "scrapeStyleguide",
+      "label": "Scrape Styleguide",
+      "risk": "read",
+      "args": {
+        "domain": "context.dev"
+      },
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "webExtraction",
+      "operation": "scrapeFonts",
+      "label": "Scrape Fonts",
+      "risk": "read",
+      "args": {
+        "domain": "context.dev"
+      },
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "webExtraction",
+      "operation": "classifyNAICSIndustries",
+      "label": "Classify NAICS industries",
+      "risk": "read",
+      "args": {
+        "input": "context.dev"
+      },
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "webExtraction",
+      "operation": "classifySICIndustries",
+      "label": "Classify SIC industries",
+      "risk": "read",
+      "args": {
+        "input": "context.dev"
+      },
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "webExtraction",
+      "operation": "queryWebsiteDataUsingAI",
+      "label": "Query website data using AI",
+      "risk": "read",
+      "args": {
+        "domain": "context.dev",
+        "data_to_extract": [
+          {
+            "datapoint_name": "pricing",
+            "datapoint_type": "text",
+            "datapoint_description": "Headline pricing information",
+            "datapoint_example": "$99 per month"
+          }
+        ]
+      },
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "webExtraction",
+      "operation": "extractASingleProductFromAURL",
+      "label": "Extract a single product from a URL",
+      "risk": "read",
+      "args": {
+        "url": "https://context.dev"
+      },
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "webExtraction",
+      "operation": "extractProductsFromABrandSWebsite",
+      "label": "Extract products from a brand's website",
+      "risk": "read",
+      "args": {
+        "domain": "context.dev"
+      },
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "people",
+      "operation": "enrichPerson",
+      "label": "Enrich Person",
+      "risk": "read",
+      "args": {
+        "name.first": "Bill",
+        "name.last": "Gates",
+        "company.domain": "microsoft.com"
+      },
+      "expect": {
+        "statuses": [
+          200,
+          403
+        ]
+      }
+    },
+    {
+      "resource": "people",
+      "operation": "retrievePerson",
+      "label": "Retrieve Person",
+      "risk": "read",
+      "args": {
+        "identifiers.linkedinUrl": "https://www.linkedin.com/in/williamhgates/"
+      },
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "brandIntelligence",
+      "operation": "retrieveBrandDataByDomain",
+      "label": "Retrieve brand data by domain",
+      "risk": "read",
+      "args": {
+        "domain": "context.dev"
+      },
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "brandIntelligence",
+      "operation": "retrieveBrandData",
+      "label": "Retrieve brand data",
+      "risk": "read",
+      "args": {
+        "type": "by_domain",
+        "domain": "stripe.com"
+      },
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "brandIntelligence",
+      "operation": "retrieveBrandDataByCompanyName",
+      "label": "Retrieve brand data by company name",
+      "risk": "read",
+      "args": {
+        "name": "Context.dev"
+      },
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "brandIntelligence",
+      "operation": "brandSearch",
+      "label": "Brand Search",
+      "risk": "read",
+      "args": {
+        "query": "context.dev"
+      },
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "brandIntelligence",
+      "operation": "retrieveBrandDataByEmailAddress",
+      "label": "Retrieve brand data by email address",
+      "risk": "read",
+      "args": {
+        "email": "hello@context.dev"
+      },
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "brandIntelligence",
+      "operation": "retrieveBrandDataByStockTicker",
+      "label": "Retrieve brand data by stock ticker",
+      "risk": "read",
+      "args": {
+        "ticker": "AAPL"
+      },
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "brandIntelligence",
+      "operation": "retrieveBrandDataByISIN",
+      "label": "Retrieve brand data by ISIN",
+      "risk": "read",
+      "args": {
+        "isin": "US0378331005"
+      },
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "brandIntelligence",
+      "operation": "identifyBrandFromTransactionData",
+      "label": "Identify brand from transaction data",
+      "risk": "read",
+      "args": {
+        "transaction_info": "AMZN Mktp US*2M35W1TR2"
+      },
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "brandIntelligence",
+      "operation": "retrieveSimplifiedBrandDataByDomain",
+      "label": "Retrieve simplified brand data by domain",
+      "risk": "read",
+      "args": {
+        "domain": "context.dev"
+      },
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "utility",
+      "operation": "prefetchBrandDataForADomain",
+      "label": "Prefetch brand data for a domain",
+      "risk": "cache-warm",
+      "args": {
+        "domain": "context.dev"
+      },
+      "expect": {
+        "statuses": [
+          200,
+          202,
+          403
+        ]
+      }
+    },
+    {
+      "resource": "utility",
+      "operation": "prefetchBrandDataByEmail",
+      "label": "Prefetch brand data by email",
+      "risk": "cache-warm",
+      "args": {
+        "email": "hello@context.dev"
+      },
+      "expect": {
+        "statuses": [
+          200,
+          202,
+          403
+        ]
+      }
+    },
+    {
+      "resource": "utility",
+      "operation": "prefetchData",
+      "label": "Prefetch data",
+      "risk": "cache-warm",
+      "args": {
+        "type": "brand",
+        "identifier.domain": "context.dev"
+      },
+      "expect": {
+        "statuses": [
+          200,
+          202,
+          403
+        ]
+      }
+    },
+    {
+      "resource": "monitors",
+      "operation": "createMonitor",
+      "label": "Create a monitor",
+      "risk": "mutating",
+      "args": {
+        "mode": "web",
+        "name": "Acme pricing page",
+        "target": {
+          "type": "page",
+          "url": "https://acme.com/pricing"
+        },
+        "change_detection.type": "exact",
+        "schedule.type": "interval",
+        "schedule.frequency": 6,
+        "schedule.unit": "hours",
+        "webhook.url": "https://example.com/webhook"
+      },
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "monitors",
+      "operation": "listMonitors",
+      "label": "List monitors",
+      "risk": "read",
+      "args": {},
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "monitors",
+      "operation": "getMonitor",
+      "label": "Get a monitor",
+      "risk": "needs-id",
+      "args": {},
+      "needsValues": [
+        "monitor_id"
+      ],
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "monitors",
+      "operation": "updateMonitor",
+      "label": "Update a monitor",
+      "risk": "needs-id",
+      "args": {
+        "name": "Acme pricing monitor",
+        "status": "active",
+        "schedule.type": "interval",
+        "schedule.frequency": 1,
+        "schedule.unit": "hours",
+        "webhook.url": "https://example.com/webhook"
+      },
+      "needsValues": [
+        "monitor_id"
+      ],
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "monitors",
+      "operation": "deleteMonitor",
+      "label": "Delete a monitor",
+      "risk": "needs-id",
+      "args": {},
+      "needsValues": [
+        "monitor_id"
+      ],
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "monitors",
+      "operation": "listMonitorRuns",
+      "label": "List monitor runs",
+      "risk": "needs-id",
+      "args": {},
+      "needsValues": [
+        "monitor_id"
+      ],
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "monitors",
+      "operation": "getMonitorRun",
+      "label": "Retrieve a monitor run",
+      "risk": "needs-id",
+      "args": {},
+      "needsValues": [
+        "monitor_id",
+        "run_id"
+      ],
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "monitors",
+      "operation": "listMonitorChanges",
+      "label": "List changes for a monitor",
+      "risk": "needs-id",
+      "args": {},
+      "needsValues": [
+        "monitor_id"
+      ],
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "monitors",
+      "operation": "listAccountRuns",
+      "label": "List runs",
+      "risk": "read",
+      "args": {},
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "monitors",
+      "operation": "listMonitorCreditUsage",
+      "label": "Monitor credit usage",
+      "risk": "read",
+      "args": {},
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "monitors",
+      "operation": "getMonitorLimits",
+      "label": "Monitor limits",
+      "risk": "read",
+      "args": {},
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "monitors",
+      "operation": "listChanges",
+      "label": "List changes",
+      "risk": "read",
+      "args": {},
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "monitors",
+      "operation": "getChange",
+      "label": "Get a change",
+      "risk": "needs-id",
+      "args": {},
+      "needsValues": [
+        "change_id"
+      ],
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "monitors",
+      "operation": "runMonitorNow",
+      "label": "Run a monitor now",
+      "risk": "needs-id",
+      "args": {},
+      "needsValues": [
+        "monitor_id"
+      ],
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "monitors",
+      "operation": "rotateMonitorWebhookSecret",
+      "label": "Rotate a monitor webhook secret",
+      "risk": "needs-id",
+      "args": {},
+      "needsValues": [
+        "monitor_id"
+      ],
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "batch",
+      "operation": "submitBatch",
+      "label": "Submit a batch",
+      "risk": "mutating",
+      "args": {
+        "input": {
+          "mode": "scrape",
+          "data": {
+            "format": "markdown",
+            "urls": [
+              {
+                "url": "https://context.dev",
+                "itemId": "n8n-live-test-1"
+              }
+            ]
+          }
+        }
+      },
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "batch",
+      "operation": "listBatches",
+      "label": "List batches",
+      "risk": "read",
+      "args": {},
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "batch",
+      "operation": "getBatch",
+      "label": "Get a batch",
+      "risk": "needs-id",
+      "args": {},
+      "needsValues": [
+        "batch_id"
+      ],
+      "expect": {
+        "statuses": [
+          200
+        ]
+      }
+    },
+    {
+      "resource": "batch",
+      "operation": "deleteBatch",
+      "label": "Delete a batch",
+      "risk": "needs-id",
+      "args": {},
+      "needsValues": [
+        "batch_id"
+      ],
+      "expect": {
+        "statuses": [
+          200,
+          202,
+          204,
+          403
+        ]
+      }
+    },
+    {
+      "resource": "batch",
+      "operation": "getBatchResults",
+      "label": "Get batch results",
+      "risk": "needs-id",
+      "args": {},
+      "needsValues": [
+        "batch_id"
+      ],
+      "expect": {
+        "statuses": [
+          200,
+          409
+        ]
+      }
+    },
+    {
+      "resource": "batch",
+      "operation": "cancelBatch",
+      "label": "Cancel a batch",
+      "risk": "needs-id",
+      "args": {},
+      "needsValues": [
+        "batch_id"
+      ],
+      "expect": {
+        "statuses": [
+          200,
+          202,
+          409
+        ]
+      }
+    }
+  ]
+}
