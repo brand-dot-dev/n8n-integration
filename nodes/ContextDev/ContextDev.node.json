@@ -1,17 +1,26 @@
 {
-	"node": "n8n-nodes-context-dev.contextDev",
-	"nodeVersion": "1.0",
-	"codexVersion": "1.0",
-	"categories": ["Data & Storage"],
-	"subcategories": {
-		"Data & Storage": ["Content & Files"]
-	},
-	"resources": {
-		"primaryDocumentation": [
-			{
-				"url": "https://docs.context.dev"
-			}
-		]
-	},
-	"alias": ["context.dev", "brand intelligence", "web scraping", "scrape"]
+  "node": "n8n-nodes-context-dev.contextDev",
+  "nodeVersion": "1.0",
+  "codexVersion": "1.0",
+  "categories": [
+    "Data & Storage"
+  ],
+  "subcategories": {
+    "Data & Storage": [
+      "Content & Files"
+    ]
+  },
+  "resources": {
+    "primaryDocumentation": [
+      {
+        "url": "https://docs.context.dev"
+      }
+    ]
+  },
+  "alias": [
+    "context.dev",
+    "brand intelligence",
+    "web scraping",
+    "scrape"
+  ]
 }
