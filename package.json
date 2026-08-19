@@ -1,7 +1,7 @@
 {
   "name": "n8n-nodes-context-dev",
   "version": "3.0.0",
-  "description": "n8n community node for Context.dev API — brand intelligence, web scraping, industry classification, and AI data extraction",
+  "description": "n8n community node for Context.dev API \u2014 brand intelligence, web scraping, AI extraction, monitoring, batch, and web databases",
   "license": "MIT",
   "homepage": "https://github.com/context-dot-dev/n8n-integration#readme",
   "keywords": [
@@ -21,18 +21,10 @@
     "dev": "n8n-node dev",
     "lint": "n8n-node lint",
     "lint:fix": "n8n-node lint --fix",
-    "test": "jest",
+    "test": "npm run lint && npm run build",
     "release": "n8n-node release",
-    "prepublishOnly": "n8n-node prerelease"
-  },
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node",
-    "testMatch": ["**/tests/**/*.test.ts"],
-    "testPathIgnorePatterns": ["/node_modules/"],
-    "moduleNameMapper": {
-      "^n8n-workflow$": "<rootDir>/node_modules/n8n-workflow"
-    }
+    "prepublishOnly": "n8n-node prerelease",
+    "test:live": "node tests/live/run-live.mjs"
   },
   "files": [
     "dist"
@@ -49,12 +41,9 @@
   },
   "devDependencies": {
     "@n8n/node-cli": "*",
-    "@types/jest": "^29.5.0",
     "eslint": "9.32.0",
-    "jest": "^29.5.0",
     "prettier": "3.6.2",
     "release-it": "^19.0.4",
-    "ts-jest": "^29.1.0",
     "ts-node": "^10.9.2",
     "typescript": "5.9.2"
   },
