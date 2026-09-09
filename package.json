@@ -26,7 +26,12 @@
 		"dev": "n8n-node dev",
 		"lint": "n8n-node lint",
 		"lint:fix": "n8n-node lint --fix",
-		"test": "npm run lint",
+		"test": "npm run test:unit && npm run test:contract",
+		"test:unit": "tsx --test tests/unit/*.test.cts",
+		"test:contract": "tsx --test tests/contract/*.test.cts",
+		"scan:published": "npx --yes @n8n/scan-community-package@0.35.0 n8n-nodes-branddev",
+		"audit:production": "npm audit --omit=dev --audit-level=high",
+		"check": "npm run lint && npm test && npm run build && npm run audit:production",
 		"release": "n8n-node release",
 		"prepublishOnly": "n8n-node prerelease"
 	},
@@ -49,6 +54,7 @@
 		"n8n-workflow": "^2.16.0",
 		"prettier": "3.8.3",
 		"release-it": "20.2.0",
+		"tsx": "4.20.5",
 		"typescript": "5.9.3"
 	},
 	"peerDependencies": {
