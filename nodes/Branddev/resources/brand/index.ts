@@ -18,7 +18,8 @@ export const brandDescription: INodeProperties[] = [
 				name: 'Identify From Transaction',
 				value: 'identifyByTransaction',
 				action: 'Identify brand from transaction data',
-				description: 'Identify brands from transaction information with optional geographic and industry context. <a href="https://docs.brand.dev/api-reference/retrieve-brand/identify-brand-from-transaction-data" target="_blank">View docs</a>.',
+				description:
+					'Identify brands from transaction information with optional geographic and industry context. <a href="https://docs.context.dev/api-reference/retrieve-brand/identify-brand-from-transaction-data" target="_blank">View docs</a>.',
 				routing: {
 					request: {
 						method: 'GET',
@@ -30,7 +31,8 @@ export const brandDescription: INodeProperties[] = [
 				name: 'Retrieve by Company Name',
 				value: 'retrieveByName',
 				action: 'Retrieve brand data by company name',
-				description: 'Search for company by name and retrieve brand data. <a href="https://docs.brand.dev/api-reference/retrieve-brand/retrieve-brand-data-by-company-name" target="_blank">View docs</a>.',
+				description:
+					'Search for company by name and retrieve brand data. <a href="https://docs.context.dev/api-reference/retrieve-brand/retrieve-brand-data-by-company-name" target="_blank">View docs</a>.',
 				routing: {
 					request: {
 						method: 'GET',
@@ -42,7 +44,8 @@ export const brandDescription: INodeProperties[] = [
 				name: 'Retrieve by Domain',
 				value: 'retrieve',
 				action: 'Retrieve brand data by domain',
-				description: 'Get brand information including logos, colors, and more. <a href="https://docs.brand.dev/api-reference/retrieve-brand/retrieve-brand-data-by-domain" target="_blank">View docs</a>.',
+				description:
+					'Get brand information including logos, colors, and more. <a href="https://docs.context.dev/api-reference/retrieve-brand/retrieve-brand-data-by-domain" target="_blank">View docs</a>.',
 				routing: {
 					request: {
 						method: 'GET',
@@ -54,7 +57,8 @@ export const brandDescription: INodeProperties[] = [
 				name: 'Retrieve by Email',
 				value: 'retrieveByEmail',
 				action: 'Retrieve brand data by email address',
-				description: 'Extract domain from email and retrieve brand data (excludes free/disposable emails). <a href="https://docs.brand.dev/api-reference/retrieve-brand/retrieve-brand-data-by-email-address" target="_blank">View docs</a>.',
+				description:
+					'Extract domain from email and retrieve brand data (excludes free/disposable emails). <a href="https://docs.context.dev/api-reference/retrieve-brand/retrieve-brand-data-by-email-address" target="_blank">View docs</a>.',
 				routing: {
 					request: {
 						method: 'GET',
@@ -66,7 +70,8 @@ export const brandDescription: INodeProperties[] = [
 				name: 'Retrieve by ISIN',
 				value: 'retrieveByIsin',
 				action: 'Retrieve brand data by ISIN',
-				description: 'Look up company by ISIN and retrieve brand data. <a href="https://docs.brand.dev/api-reference/retrieve-brand/retrieve-brand-data-by-isin" target="_blank">View docs</a>.',
+				description:
+					'Look up company by ISIN and retrieve brand data. <a href="https://docs.context.dev/api-reference/retrieve-brand/retrieve-brand-data-by-isin" target="_blank">View docs</a>.',
 				routing: {
 					request: {
 						method: 'GET',
@@ -78,7 +83,8 @@ export const brandDescription: INodeProperties[] = [
 				name: 'Retrieve by Stock Ticker',
 				value: 'retrieveByTicker',
 				action: 'Retrieve brand data by stock ticker',
-				description: 'Look up company by stock ticker symbol and retrieve brand data. <a href="https://docs.brand.dev/api-reference/retrieve-brand/retrieve-brand-data-by-stock-ticker" target="_blank">View docs</a>.',
+				description:
+					'Look up company by stock ticker symbol and retrieve brand data. <a href="https://docs.context.dev/api-reference/retrieve-brand/retrieve-brand-data-by-stock-ticker" target="_blank">View docs</a>.',
 				routing: {
 					request: {
 						method: 'GET',
@@ -90,7 +96,8 @@ export const brandDescription: INodeProperties[] = [
 				name: 'Retrieve Simplified by Domain',
 				value: 'retrieveSimplified',
 				action: 'Retrieve simplified brand data by domain',
-				description: 'Get essential brand information (domain, title, colors, logos, backdrops) optimized for speed. <a href="https://docs.brand.dev/api-reference/retrieve-brand/retrieve-simplified-brand-data-by-domain" target="_blank">View docs</a>.',
+				description:
+					'Get essential brand information (domain, title, colors, logos, backdrops) optimized for speed. <a href="https://docs.context.dev/api-reference/retrieve-brand/retrieve-simplified-brand-data-by-domain" target="_blank">View docs</a>.',
 				routing: {
 					request: {
 						method: 'GET',
@@ -158,7 +165,8 @@ export const brandDescription: INodeProperties[] = [
 		},
 		default: '',
 		placeholder: 'contact@example.com',
-		description: 'Email address to extract domain from. Free email providers (gmail.com, yahoo.com) and disposable addresses are not allowed.',
+		description:
+			'Email address to extract domain from. Free email providers (gmail.com, yahoo.com) and disposable addresses are not allowed.',
 		routing: {
 			request: {
 				qs: {
@@ -264,7 +272,15 @@ export const brandDescription: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				...showOnlyForBrand,
-				operation: ['retrieve', 'retrieveByName', 'retrieveByEmail', 'retrieveByTicker', 'retrieveByIsin', 'retrieveSimplified', 'identifyByTransaction'],
+				operation: [
+					'retrieve',
+					'retrieveByName',
+					'retrieveByEmail',
+					'retrieveByTicker',
+					'retrieveByIsin',
+					'retrieveSimplified',
+					'identifyByTransaction',
+				],
 			},
 		},
 		options: [
@@ -319,7 +335,8 @@ export const brandDescription: INodeProperties[] = [
 				},
 				default: '',
 				placeholder: 'us',
-				description: 'ISO 3166-1 alpha-2 country code for geographic search prioritization (e.g., us, gb, ca)',
+				description:
+					'ISO 3166-1 alpha-2 country code for geographic search prioritization (e.g., us, gb, ca)',
 				routing: {
 					request: {
 						qs: {
@@ -476,7 +493,8 @@ export const brandDescription: INodeProperties[] = [
 				name: 'speed_optimized',
 				type: 'boolean',
 				default: false,
-				description: 'Whether to optimize for speed by skipping time-consuming operations. Results in faster response but less comprehensive data.',
+				description:
+					'Whether to optimize for speed by skipping time-consuming operations. Results in faster response but less comprehensive data.',
 				routing: {
 					request: {
 						qs: {

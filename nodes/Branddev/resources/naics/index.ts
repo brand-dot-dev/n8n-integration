@@ -18,7 +18,8 @@ export const naicsDescription: INodeProperties[] = [
 				name: 'Classify Brand',
 				value: 'classify',
 				action: 'Retrieve NAICS code for any brand',
-				description: 'Classify any brand into a 2022 NAICS code. <a href="https://docs.brand.dev/api-reference/industry-classification/retrieve-naics-code-for-any-brand" target="_blank">View docs</a>.',
+				description:
+					'Classify any brand into a 2022 NAICS code. <a href="https://docs.context.dev/api-reference/industry-classification/retrieve-naics-code-for-any-brand" target="_blank">View docs</a>.',
 				routing: {
 					request: {
 						method: 'GET',
@@ -42,7 +43,8 @@ export const naicsDescription: INodeProperties[] = [
 		},
 		default: '',
 		placeholder: 'example.com or Apple Inc',
-		description: 'Brand domain or company name to classify. If a valid domain is provided, it will be used; otherwise, we will search for the brand using the provided title.',
+		description:
+			'Brand domain or company name to classify. If a valid domain is provided, it will be used; otherwise, we will search for the brand using the provided title.',
 		routing: {
 			request: {
 				qs: {

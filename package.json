@@ -1,51 +1,57 @@
 {
-  "name": "n8n-nodes-branddev",
-  "version": "1.3.0",
-  "description": "n8n node for Brand.dev API - retrieve brand data, screenshots, and company information",
-  "license": "MIT",
-  "homepage": "https://github.com/brand-dot-dev/n8n-integration#readme",
-  "keywords": [
-    "n8n-community-node-package"
-  ],
-  "author": {
-    "name": "Yahia Bakour",
-    "email": "yahia@brand.dev"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/brand-dot-dev/n8n-integration.git"
-  },
-  "scripts": {
-    "build": "n8n-node build",
-    "build:watch": "tsc --watch",
-    "dev": "n8n-node dev",
-    "lint": "n8n-node lint",
-    "lint:fix": "n8n-node lint --fix",
-    "test": "npm run lint",
-    "release": "n8n-node release",
-    "prepublishOnly": "n8n-node prerelease"
-  },
-  "files": [
-    "dist"
-  ],
-  "n8n": {
-    "n8nNodesApiVersion": 1,
-    "strict": true,
-    "credentials": [
-      "dist/credentials/BranddevApi.credentials.js"
-    ],
-    "nodes": [
-      "dist/nodes/Branddev/Branddev.node.js"
-    ]
-  },
-  "devDependencies": {
-    "@n8n/node-cli": "*",
-    "eslint": "9.32.0",
-    "prettier": "3.6.2",
-    "release-it": "^19.0.4",
-    "typescript": "5.9.2"
-  },
-  "peerDependencies": {
-    "n8n-workflow": "*"
-  }
+	"name": "n8n-nodes-branddev",
+	"version": "1.3.0",
+	"description": "n8n community node for the Context.dev web, brand intelligence, monitoring, batch, and news APIs",
+	"license": "MIT",
+	"homepage": "https://github.com/context-dot-dev/n8n-integration#readme",
+	"keywords": [
+		"n8n-community-node-package",
+		"context.dev",
+		"web-scraping",
+		"web-search",
+		"brand-intelligence",
+		"news-api"
+	],
+	"author": {
+		"name": "Context.dev",
+		"email": "support@context.dev"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/context-dot-dev/n8n-integration.git"
+	},
+	"scripts": {
+		"build": "n8n-node build",
+		"build:watch": "tsc --watch",
+		"dev": "n8n-node dev",
+		"lint": "n8n-node lint",
+		"lint:fix": "n8n-node lint --fix",
+		"test": "npm run lint",
+		"release": "n8n-node release",
+		"prepublishOnly": "n8n-node prerelease"
+	},
+	"files": [
+		"dist"
+	],
+	"n8n": {
+		"n8nNodesApiVersion": 1,
+		"strict": true,
+		"credentials": [
+			"dist/credentials/BranddevApi.credentials.js"
+		],
+		"nodes": [
+			"dist/nodes/Branddev/Branddev.node.js"
+		]
+	},
+	"devDependencies": {
+		"@n8n/node-cli": "0.47.2",
+		"eslint": "9.39.4",
+		"n8n-workflow": "^2.16.0",
+		"prettier": "3.8.3",
+		"release-it": "20.2.0",
+		"typescript": "5.9.3"
+	},
+	"peerDependencies": {
+		"n8n-workflow": "*"
+	}
 }

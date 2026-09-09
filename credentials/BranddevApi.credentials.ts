@@ -8,9 +8,9 @@ import type {
 export class BranddevApi implements ICredentialType {
 	name = 'branddevApi';
 
-	displayName = 'Brand.dev API';
+	displayName = 'Context.dev API';
 
-	documentationUrl = 'https://docs.brand.dev/quickstart';
+	documentationUrl = 'https://docs.context.dev/quickstart';
 
 	icon = 'file:branddev.svg' as const;
 
@@ -22,8 +22,8 @@ export class BranddevApi implements ICredentialType {
 			typeOptions: { password: true },
 			required: true,
 			default: '',
-			placeholder: 'brand_...',
-			description: 'API key from your Brand.dev account',
+			placeholder: 'ctxt_secret_...',
+			description: 'API key from your Context.dev account',
 		},
 	];
 
@@ -32,18 +32,15 @@ export class BranddevApi implements ICredentialType {
 		properties: {
 			headers: {
 				Authorization: '=Bearer {{$credentials.accessToken}}',
-				'integration_name': 'n8n',
+				integration_name: 'n8n',
 			},
 		},
 	};
 
 	test: ICredentialTestRequest = {
 		request: {
-			baseURL: 'https://api.brand.dev/v1',
-			url: '/brand/retrieve',
-			qs: {
-				domain: 'brand.dev',
-			},
+			baseURL: 'https://api.context.dev/v1',
+			url: '/monitors/limits',
 		},
 	};
 }

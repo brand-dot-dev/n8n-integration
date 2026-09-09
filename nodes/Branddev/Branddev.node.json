@@ -1,17 +1,17 @@
 {
 	"node": "n8n-nodes-branddev",
-	"nodeVersion": "1.0",
+	"nodeVersion": "2.0",
 	"codexVersion": "1.0",
 	"categories": ["Development", "Marketing & Content"],
 	"resources": {
 		"credentialDocumentation": [
 			{
-				"url": "https://docs.brand.dev/quickstart"
+				"url": "https://docs.context.dev/quickstart"
 			}
 		],
 		"primaryDocumentation": [
 			{
-				"url": "https://docs.brand.dev"
+				"url": "https://docs.context.dev"
 			}
 		]
 	}
