@@ -18,7 +18,8 @@ export const screenshotStyleguideDescription: INodeProperties[] = [
 				name: 'Take Screenshot',
 				value: 'capture',
 				action: 'Take screenshot of website',
-				description: 'Capture a screenshot of a website (viewport or full page). <a href="https://docs.brand.dev/api-reference/screenshot-styleguide/take-screenshot-of-website" target="_blank">View docs</a>.',
+				description:
+					'Capture a screenshot of a website (viewport or full page). <a href="https://docs.context.dev/api-reference/screenshot-styleguide/take-screenshot-of-website" target="_blank">View docs</a>.',
 				routing: {
 					request: {
 						method: 'GET',
@@ -30,7 +31,8 @@ export const screenshotStyleguideDescription: INodeProperties[] = [
 				name: 'Extract Styleguide',
 				value: 'extractStyleguide',
 				action: 'Extract design system and styleguide from website',
-				description: 'Extract comprehensive design system including colors, typography, spacing, shadows, and components. <a href="https://docs.brand.dev/api-reference/screenshot-styleguide/extract-design-system-and-styleguide-from-website" target="_blank">View docs</a>.',
+				description:
+					'Extract comprehensive design system including colors, typography, spacing, shadows, and components. <a href="https://docs.context.dev/api-reference/screenshot-styleguide/extract-design-system-and-styleguide-from-website" target="_blank">View docs</a>.',
 				routing: {
 					request: {
 						method: 'GET',
@@ -42,7 +44,8 @@ export const screenshotStyleguideDescription: INodeProperties[] = [
 				name: 'Extract Fonts',
 				value: 'extractFonts',
 				action: 'Extract font information from website',
-				description: 'Extract font information including font families, usage statistics, fallbacks, and element/word counts. <a href="https://docs.brand.dev/api-reference/screenshot-styleguide/extract-fonts-from-website" target="_blank">View docs</a>.',
+				description:
+					'Extract font information including font families, usage statistics, fallbacks, and element/word counts. <a href="https://docs.context.dev/api-reference/screenshot-styleguide/extract-fonts-from-website" target="_blank">View docs</a>.',
 				routing: {
 					request: {
 						method: 'GET',
@@ -93,7 +96,8 @@ export const screenshotStyleguideDescription: INodeProperties[] = [
 				name: 'fullScreenshot',
 				type: 'boolean',
 				default: false,
-				description: 'Whether to take a full page screenshot. If false, takes a viewport screenshot (standard browser view).',
+				description:
+					'Whether to take a full page screenshot. If false, takes a viewport screenshot (standard browser view).',
 				routing: {
 					request: {
 						qs: {
@@ -107,7 +111,8 @@ export const screenshotStyleguideDescription: INodeProperties[] = [
 				name: 'page',
 				type: 'options',
 				default: 'login',
-				description: 'Specific page type to screenshot. System will find the most appropriate URL for this page type.',
+				description:
+					'Specific page type to screenshot. System will find the most appropriate URL for this page type.',
 				options: [
 					{ name: 'Blog', value: 'blog' },
 					{ name: 'Careers', value: 'careers' },

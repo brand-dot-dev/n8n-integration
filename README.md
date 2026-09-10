@@ -1,126 +1,103 @@
-# n8n-nodes-branddev
+# Context.dev for n8n
 
-This is an n8n community node that lets you interact with the [Brand.dev API](https://brand.dev) in your n8n workflows.
+Use the public [Context.dev API](https://context.dev) in n8n workflows to search and scrape the live web, extract structured data, monitor websites, process batches, find company news, parse documents, and enrich brand or person data.
 
-Brand.dev provides comprehensive brand data including logos, colors, fonts, screenshots, styleguides, and company information for millions of brands worldwide.
-
-[n8n](https://n8n.io/) is a [fair-code licensed](https://docs.n8n.io/sustainable-use-license/) workflow automation platform.
-
-[Installation](#installation) | [Operations](#operations) | [Credentials](#credentials) | [Compatibility](#compatibility) | [Resources](#resources)
+The npm package remains named `n8n-nodes-branddev` so existing installations and workflows continue to upgrade normally. New nodes use the Context.dev name and the current production API at `https://api.context.dev/v1`.
 
 ## Installation
 
-Follow the [installation guide](https://docs.n8n.io/integrations/community-nodes/installation/) in the n8n community nodes documentation.
+In n8n, open **Settings → Community Nodes**, select **Install**, and enter:
 
-For the n8n desktop app, go to **Settings** > **Community Nodes** and search for `n8n-nodes-branddev`.
+```text
+n8n-nodes-branddev
+```
 
-## Operations
-
-This node supports the following resources and operations:
-
-### Brand
-- **Retrieve by Domain** - Get brand information by domain name
-  - Returns logos, colors, fonts, company info, social media, and more
-  - Supports 50+ languages via `force_language` parameter
-  - Optional speed optimization for faster responses
-  - Configurable timeout (1-300,000ms)
-  
-- **Retrieve by Company Name** - Search for a company by name and retrieve brand data
-  - Fuzzy search for company names (3-30 characters)
-  - Returns comprehensive brand data
-  
-- **Retrieve by Email** - Extract domain from email and retrieve brand data
-  - Excludes free email providers (gmail.com, yahoo.com, etc.)
-  - Blocks disposable email addresses
-  
-- **Retrieve by Stock Ticker** - Look up company by stock ticker symbol
-  - Supports 30+ global stock exchanges (NASDAQ, NYSE, LSE, JPX, HKSE, etc.)
-  - Configurable exchange via `ticker_exchange` parameter
-  
-- **Retrieve by ISIN** - Look up company by International Securities Identification Number
-  - Global securities identification
-  - Returns full brand data
-
-### Industry Classification (NAICS)
-- **Classify Brand** - Get NAICS (North American Industry Classification System) codes for any brand
-  - Accepts domain or company name as input
-  - Returns 1-10 NAICS codes with confidence scores
-  - Configurable min/max results
-  - Supports detailed 6-digit NAICS codes
-
-### Screenshot / Styleguide
-- **Take Screenshot** - Capture a viewport or full-page screenshot of any website
-  - Viewport or full-page screenshots
-  - Specific page types (login, pricing, careers, contact, blog, etc.)
-  - Quality vs speed optimization
-  - Returns high-quality screenshot URL
-  
-- **Extract Styleguide** - Extract comprehensive design system including colors, typography, spacing, shadows, and components
-  - Color palettes with usage statistics
-  - Typography scales and font information
-  - Spacing and sizing systems
-  - Box shadows and border radius values
-  - Component patterns and styles
-  
-- **Extract Fonts** - Get detailed font information including families, usage statistics, and fallbacks
-  - Font family detection
-  - Usage statistics (element count, word count)
-  - Fallback chains
-  - Font weights and styles
+See n8n's [community node installation guide](https://docs.n8n.io/integrations/community-nodes/installation/) for self-hosted installation options.
 
 ## Credentials
 
-To use this node, you need a Brand.dev API key:
+1. Create a Context.dev account at [context.dev](https://context.dev).
+2. Copy an API key from the [Context.dev dashboard](https://context.dev/home).
+3. In n8n, create a **Context.dev API** credential and paste the key.
 
-1. Sign up for a free account at [Brand.dev](https://brand.dev)
-2. Go to your [dashboard](https://brand.dev/home) and copy your API key
-4. In n8n, create new credentials:
-   - Go to **Credentials** > **New**
-   - Search for "Brand.dev API"
-   - Paste your API key
+The credential check calls a read-only account-limits endpoint and does not create work or consume web-data credits.
 
-The node will automatically test the credentials by making a test request to the Brand.dev API.
+## Operations
 
-## Compatibility
+The current node version tracks every operation in the [public API reference](https://docs.context.dev/api-reference).
 
-This node has been tested with:
-- n8n version 1.0.0 and above
-- Requires n8n-workflow as a peer dependency
+| Resource           | Operations                                                                                                           |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------- |
+| Web Scraping       | Scrape Markdown, scrape HTML, scrape images, crawl a sitemap, crawl a website, search the web, and take screenshots  |
+| Web Extraction     | Extract structured data, styleguides, fonts, NAICS/SIC classifications, and one or many products                     |
+| Brand Intelligence | Retrieve a brand by domain, name, email, ticker, direct URL, or transaction; search brands                           |
+| News               | Search current company news by name, domain, ticker, or ISIN                                                         |
+| Parsing            | Convert binary PDF, Office, image, text, code, and data files into Markdown                                          |
+| People             | Enrich a person from email, social profiles, name, company, education, or location clues                             |
+| Monitors           | Create, list, retrieve, update, delete, run, and inspect monitors, runs, changes, usage, limits, and webhook secrets |
+| Batch              | Submit, list, retrieve, cancel, delete, and read results for scrape or crawl batches                                 |
+| Webhooks           | List, retrieve, inspect attempts for, and retry webhook deliveries                                                   |
+| Utility            | Prefetch brand or styleguide data                                                                                    |
 
-## Usage
+## Using JSON inputs
 
-### Example: Get Brand Logos and Colors
+Current operations accept the same JSON objects documented by the API. Every operation starts with a valid minimal example that can be edited or replaced with an n8n expression.
 
-1. Add the Brand.dev node to your workflow
-2. Select **Brand** as the resource
-3. Choose **Retrieve by Domain** operation
-4. Enter a domain (e.g., `stripe.com`)
-5. The node returns comprehensive brand data including:
-   - Logos (SVG, PNG formats with different variations)
-   - Brand colors (primary, accent, background)
-   - Company information
-   - Social media links
+For example, **News → Search Company News** starts with:
 
-### Example: Take Website Screenshots
+```json
+{
+	"searchBy": {
+		"type": "entity",
+		"entity": {
+			"type": "domain",
+			"domain": "context.dev"
+		}
+	},
+	"limit": 10
+}
+```
 
-1. Select **Screenshot / Styleguide** as the resource
-2. Choose **Take Screenshot** operation
-3. Enter a domain and optionally enable full-page screenshot
-4. Get a high-quality screenshot URL
+To get a timestamped YouTube transcript, choose **Web Scraping → Scrape Markdown** and pass the video URL:
 
-### Tips
+```json
+{
+	"url": "https://www.youtube.com/watch?v=VIDEO_ID"
+}
+```
 
-- Use the **Additional Fields** to customize API requests with optional parameters
-- Combine with other n8n nodes to enrich your data pipelines
-- The node supports n8n's usable as AI tool feature for AI-powered workflows
+For path-based operations, IDs are separate required fields and are URL-encoded automatically. Destructive operations require an explicit confirmation toggle. Batch submission and webhook retry also expose an optional idempotency key.
+
+## Parsing files
+
+The **Parsing → Parse File** operation reads binary data produced by a previous n8n node. Set **Input Binary Field** to that field's name (usually `data`). The node sends the bytes directly, infers the extension from n8n's binary metadata when possible, and enforces the API's 25 MiB limit before upload.
+
+## Workflow compatibility
+
+- New Context.dev nodes default to version 2 and use only current public endpoints.
+- Existing version 1 Brand.dev nodes retain their saved resources, operations, and request shapes.
+- The internal node and credential identifiers are unchanged, so upgrading does not orphan saved workflows or credentials.
+- All requests use `https://api.context.dev/v1`; the old `api.brand.dev` hostname is no longer emitted.
+
+## Development
+
+Use Node.js 24 for the current n8n development server.
+
+```bash
+npm ci
+npm run check
+npm run dev
+```
+
+`npm run check` runs n8n's strict Cloud-compatible lint rules, unit and execution tests, a live contract comparison against Context.dev's published OpenAPI document, a production build, and a production-dependency audit.
 
 ## Resources
 
+- [Context.dev documentation](https://docs.context.dev)
+- [Context.dev API reference](https://docs.context.dev/api-reference)
 - [n8n community nodes documentation](https://docs.n8n.io/integrations/community-nodes/)
-- [Brand.dev API Documentation](https://docs.brand.dev)
-- [Brand.dev API Reference](https://docs.brand.dev/api-reference)
-- [GitHub Repository](https://github.com/nikhilrado/brand-dev-n8n)
+- [Issue tracker](https://github.com/context-dot-dev/n8n-integration/issues)
 
 ## License
 
-MIT
+[MIT](LICENSE)
